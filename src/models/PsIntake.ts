@@ -1,17 +1,16 @@
 import pool from '../config/database'
 
 export type BasePsIntake = {
-    id: number,
+    id?: number,
     referral_source: string,
     employee_id: number
 }
 
-
-export class PsIntakeModel {
+export default class PsIntakeModel {
     async index(): Promise<BasePsIntake[]> {
         const connection = await pool.connect();
         try {
-            const sql = `SELECT * FROM psIntakes`;
+            const sql = `SELECT * FROM ps_intakes`;
             const result = await connection.query(sql);
 
             return result.rows;
@@ -22,7 +21,7 @@ export class PsIntakeModel {
         }
     }
 
-    async show(id: string): Promise<BasePsIntake> {
+    async show(id: number): Promise<BasePsIntake> {
         try {
             const connection = await pool.connect();
             const sql = 'SELECT * FROM psIntakes WHERE id=($1)';
@@ -30,15 +29,15 @@ export class PsIntakeModel {
             connection.release();
             return result.rows[0];
         } catch (err) {
-            throw new Error(`Could not get psIntake. Error:  ${(err as Error).message}`)
+            throw new Error(`Could not get ps_intakes. Error:  ${(err as Error).message}`)
         }
     }
 
     async create(psIntake: BasePsIntake): Promise<BasePsIntake> {
         try {
-            
+
             const conn = await pool.connect()
-            const sql = 'INSERT INTO psIntakes (referral_source, employee_id) VALUES($1, $2) RETURNING *'
+            const sql = 'INSERT INTO ps_intakes (referral_source, employee_id) VALUES($1, $2) RETURNING *'
             const result = await conn.query(sql, [psIntake.referral_source, psIntake.employee_id])
             const newPsIntake = result.rows[0]
 
@@ -52,10 +51,10 @@ export class PsIntakeModel {
     }
 
 
-    async update(psIntakeId: string, psIntake: BasePsIntake): Promise<BasePsIntake> {
+    async update(psIntakeId: number, psIntake: BasePsIntake): Promise<BasePsIntake> {
         try {
             const connection = await pool.connect();
-            const sql = "UPDATE psIntakes SET referral_source = $1, employee_id = $2 WHERE id = $3 RETURNING *";
+            const sql = "UPDATE ps_intakes SET referral_source = $1, employee_id = $2 WHERE id = $3 RETURNING *";
             const result = await connection.query(sql, [psIntake.referral_source, psIntake.employee_id, psIntakeId]);
             connection.release();
             const updatedPsIntake = result.rows[0];
@@ -65,10 +64,10 @@ export class PsIntakeModel {
         }
     }
 
-    async delete(psIntakeId: string): Promise<BasePsIntake> {
+    async delete(psIntakeId: number): Promise<BasePsIntake> {
         try {
             const connection = await pool.connect();
-            const sql = "DELETE FROM psIntakes WHERE id=$1 RETURNING *";
+            const sql = "DELETE FROM ps_intakes WHERE id=$1 RETURNING *";
             const result = await connection.query(sql, [psIntakeId]);
             connection.release();
             const deletedPsIntake = result.rows[0];
@@ -77,4 +76,24 @@ export class PsIntakeModel {
             throw new Error(`Could not delete psIntake ${psIntakeId}. Error:  ${(err as Error).message}`)
         }
     }
+    // : Promise<Order>
+    async addBeneficiary(isDirect: number, psIntakeId: string, beneficiaryId: string) {
+        try {
+            const sql = 'INSERT INTO beneficiary_ps_intakes (is_direct, ps_intake_id, beneficiary_id) VALUES($1, $2, $3) RETURNING *'
+            //@ts-ignore
+            const conn = await Client.connect()
+
+            const result = await conn
+                .query(sql, [isDirect, psIntakeId, beneficiaryId])
+
+            const order = result.rows[0]
+
+            conn.release()
+
+            return order
+        } catch (err) {
+            throw new Error(`Could not add product ${beneficiaryId} to ps intake ${psIntakeId}: ${err}`)
+        }
+    }
+
 }

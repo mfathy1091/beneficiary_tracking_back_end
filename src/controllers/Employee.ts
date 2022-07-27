@@ -16,8 +16,8 @@ const index = async (_req: Request, res: Response, next:NextFunction) => {
 
 const show = async (req: Request, res: Response, next:NextFunction) => {
     try {
-        const product = await employeeModel.show(req.params.productId)
-        res.json(product)
+        const employee = await employeeModel.show(req.params.employeeId)
+        res.json(employee)
     } catch (err) {
         next(err)
     }
@@ -54,8 +54,8 @@ const update = async (req: Request, res: Response, next:NextFunction) => {
 
 const destroy = async (req: Request, res: Response, next:NextFunction) => {
     try {
-        const deleted = await employeeModel.delete(req.params.employeeId)
-        res.json(deleted)
+        const deletedEmployee = await employeeModel.delete(req.params.employeeId)
+        res.json(deletedEmployee)
     } catch (err) {
         next(err)
     }

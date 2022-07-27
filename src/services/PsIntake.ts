@@ -9,21 +9,22 @@ type PsIntake = Omit<BasePsIntake, "employee_id"> & {
 };
 
 
-async function getOne(psIntakeId: number): Promise<PsIntake> {
+async function getDetails(psIntakeId: number): Promise<PsIntake> {
     const connection = await pool.connect();
     try {
         const result = await connection.query(
             `
-            SELECT ps_intake.id, ps_intake.referral_source,
-            employee.name as "employeeName",
-            employee.id as "employeeId",
+            SELECT ps_intakes.id, ps_intakes.referral_source,
+            employees.name as "employeeName",
+            employees.id as "employeeId",
             beneficiary_ps_intakes.is_direct,
-            beneficiary.name as "beneficiaryName",
-            beneficiary.id as "beneficiaryId"
-            FROM course INNER JOIN employee ON ps_intake.employee_id = employee.id
-            LEFT OUTER JOIN beneficiary_ps_intakes ON ps_intake.id = beneficiary_ps_intakes.course_id
-            LEFT OUTER JOIN beneficiary ON beneficiary.id = beneficiary_ps_intakes.beneficiary_id
-            WHERE ps_intake.id = $1;
+            beneficiaries.name as "beneficiaryName",
+            beneficiaries.id as "beneficiaryId"
+            FROM ps_intakes
+            INNER JOIN employees ON ps_intakes.employee_id = employees.id
+            LEFT OUTER JOIN beneficiary_ps_intakes ON ps_intakes.id = beneficiary_ps_intakes.ps_intake_id
+            LEFT OUTER JOIN beneficiaries ON beneficiaries.id = beneficiary_ps_intakes.beneficiary_id
+            WHERE ps_intakes.id = $1;
         `,
             [psIntakeId]
         );
@@ -46,4 +47,14 @@ async function getOne(psIntakeId: number): Promise<PsIntake> {
     } finally {
         connection.release();
     }
-}   
+}
+
+
+
+export const psIntakeService = {
+    getDetails,
+    // setGrade,
+    // add: courseModel.add,
+    // remove: courseModel.remove,
+    // update: courseModel.update,
+};
