@@ -9,11 +9,9 @@ psIntakeRouter.get('/', controller.index)
 
 // psIntakeRouter.get('/:psIntakeId', controller.show)
 
-psIntakeRouter.post(':psIntakeId/beneficiaries', controller.addBeneficiary)
-
+psIntakeRouter.post('add/:psIntakeId', controller.addBeneficiary)
 
 psIntakeRouter.post('/', verifyAuthToken, controller.create) 
-
 
 psIntakeRouter.put('/:psIntakeId', verifyAuthToken, controller.update) 
 
