@@ -62,9 +62,9 @@ const destroy = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 const addBeneficiary = async (_req: Request, res: Response, next: NextFunction) => {
-    const psIntakeId: string = _req.params.psIntakeId
-    const beneficiaryId: string = _req.body.beneficiaryId
-    const isDirect: number = parseInt(_req.body.isDirect)
+    const psIntakeId: number = Number(_req.params.psIntakeId)
+    const beneficiaryId: number = Number(_req.body.beneficiary_id)
+    const isDirect: number = Number(_req.body.is_direct)
 
     try {
         const addedProduct = await psIntakeModel.addBeneficiary(isDirect, psIntakeId, beneficiaryId)
@@ -74,6 +74,20 @@ const addBeneficiary = async (_req: Request, res: Response, next: NextFunction) 
     }
 }
 
+const updateIsDirect = async (_req: Request, res: Response, next: NextFunction) => {
+    const psIntakeId: number = Number(_req.params.psIntakeId)
+    const beneficiaryId: number = Number(_req.params.beneficiaryId)
+    const isDirect: number = Number(_req.body.is_direct)
+
+    try {
+        const updatedIsDirect = await psIntakeModel.updateIsDirect(psIntakeId, beneficiaryId, isDirect)
+        res.json({
+            'is_direct': updatedIsDirect
+        })
+    } catch (err) {
+        next(err)
+    }
+}
 
 const getDetails = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -92,4 +106,5 @@ export {
     destroy,
     addBeneficiary,
     getDetails,
+    updateIsDirect
 }

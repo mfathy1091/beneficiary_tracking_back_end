@@ -24,7 +24,7 @@ export default class PsIntakeModel {
     async show(id: number): Promise<BasePsIntake> {
         try {
             const connection = await pool.connect();
-            const sql = 'SELECT * FROM psIntakes WHERE id=($1)';
+            const sql = 'SELECT * FROM ps_intakes WHERE id=($1)';
             const result = await connection.query(sql, [id]);
             connection.release();
             return result.rows[0];
@@ -77,11 +77,11 @@ export default class PsIntakeModel {
         }
     }
     // : Promise<Order>
-    async addBeneficiary(isDirect: number, psIntakeId: string, beneficiaryId: string) {
+    async addBeneficiary(isDirect: number, psIntakeId: number, beneficiaryId: number) {
         try {
             const sql = 'INSERT INTO beneficiary_ps_intakes (is_direct, ps_intake_id, beneficiary_id) VALUES($1, $2, $3) RETURNING *'
             //@ts-ignore
-            const conn = await Client.connect()
+            const conn = await pool.connect()
 
             const result = await conn
                 .query(sql, [isDirect, psIntakeId, beneficiaryId])
@@ -92,7 +92,22 @@ export default class PsIntakeModel {
 
             return order
         } catch (err) {
-            throw new Error(`Could not add product ${beneficiaryId} to ps intake ${psIntakeId}: ${err}`)
+            throw new Error(`Could not add beneficiary ${beneficiaryId} to ps intake ${psIntakeId}: ${err}`)
+        }
+    }
+
+    async updateIsDirect( psIntakeId: number, beneficiaryId: number, isDirect: number): Promise<void> {
+        const connection = await pool.connect();
+        try {
+            const result = await connection.query(
+                "UPDATE beneficiary_ps_intakes SET is_direct = $1 WHERE ps_intake_id = $2 AND beneficiary_id = $3 RETURNING *;",
+                [isDirect, psIntakeId, beneficiaryId]
+            );
+            return result.rows[0].is_direct
+        } catch (err) {
+            throw new Error(`Failed to update is_direct for beneficiary ${beneficiaryId} in ps intake ${psIntakeId}: ${err}`);
+        } finally {
+            connection.release();
         }
     }
 

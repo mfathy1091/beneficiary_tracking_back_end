@@ -35,7 +35,7 @@ export default class BeneficiaryModel {
 
     async create(beneficiary: BaseBeneficiary): Promise<BaseBeneficiary> {
         try {
-            
+
             const conn = await pool.connect()
             const sql = 'INSERT INTO beneficiaries (name, file_id) VALUES($1, $2) RETURNING *'
             const result = await conn.query(sql, [beneficiary.name, beneficiary.file_id])
@@ -76,4 +76,7 @@ export default class BeneficiaryModel {
             throw new Error(`Could not delete beneficiary ${beneficiaryId}. Error:  ${(err as Error).message}`)
         }
     }
+
+
 }
+

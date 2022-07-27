@@ -4,8 +4,8 @@ import { BasePsIntake } from '../models/PsIntake'
 
 
 type PsIntake = Omit<BasePsIntake, "employee_id"> & {
-    employee: { id: number; name: string };
-    beneficiaries: { id: number; name: string; is_direct: number }[];
+    employee?: { id: number; name: string };
+    beneficiaries?: { id: number; name: string; is_direct: number }[];
 };
 
 
@@ -21,7 +21,7 @@ async function getDetails(psIntakeId: number): Promise<PsIntake> {
             beneficiaries.name as "beneficiaryName",
             beneficiaries.id as "beneficiaryId"
             FROM ps_intakes
-            INNER JOIN employees ON ps_intakes.employee_id = employees.id
+            LEFT OUTER JOIN employees ON ps_intakes.employee_id = employees.id
             LEFT OUTER JOIN beneficiary_ps_intakes ON ps_intakes.id = beneficiary_ps_intakes.ps_intake_id
             LEFT OUTER JOIN beneficiaries ON beneficiaries.id = beneficiary_ps_intakes.beneficiary_id
             WHERE ps_intakes.id = $1;
@@ -30,7 +30,8 @@ async function getDetails(psIntakeId: number): Promise<PsIntake> {
         );
 
         if (result.rowCount === 0) throw new Error(`PS Intake ${psIntakeId} not found`);
-
+        
+        // return result.rows;
         return {
             id: result.rows[0].id,
             referral_source: result.rows[0].referral_source,
