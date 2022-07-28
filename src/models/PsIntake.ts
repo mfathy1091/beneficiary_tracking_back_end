@@ -96,6 +96,25 @@ export default class PsIntakeModel {
         }
     }
 
+    async removeBeneficiary(psIntakeId: number, beneficiaryId: number) {
+        try {
+            const sql = "DELETE FROM beneficiary_ps_intakes WHERE beneficiary_id=$1 AND ps_intake_id=$2 RETURNING *";
+            //@ts-ignore
+            const conn = await pool.connect()
+
+            const result = await conn
+                .query(sql, [beneficiaryId, psIntakeId])
+
+            const order = result.rows[0]
+
+            conn.release()
+
+            return order
+        } catch (err) {
+            throw new Error(`Could not add beneficiary ${beneficiaryId} to ps intake ${psIntakeId}: ${err}`)
+        }
+    }
+
     async updateIsDirect( psIntakeId: number, beneficiaryId: number, isDirect: number): Promise<void> {
         const connection = await pool.connect();
         try {
@@ -108,6 +127,25 @@ export default class PsIntakeModel {
             throw new Error(`Failed to update is_direct for beneficiary ${beneficiaryId} in ps intake ${psIntakeId}: ${err}`);
         } finally {
             connection.release();
+        }
+    }
+
+    async addService(isDirect: number, psIntakeId: number, beneficiaryId: number) {
+        try {
+            const sql = 'INSERT INTO beneficiary_ps_intakes (is_direct, ps_intake_id, beneficiary_id) VALUES($1, $2, $3) RETURNING *'
+            //@ts-ignore
+            const conn = await pool.connect()
+
+            const result = await conn
+                .query(sql, [isDirect, psIntakeId, beneficiaryId])
+
+            const order = result.rows[0]
+
+            conn.release()
+
+            return order
+        } catch (err) {
+            throw new Error(`Could not add beneficiary ${beneficiaryId} to ps intake ${psIntakeId}: ${err}`)
         }
     }
 

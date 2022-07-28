@@ -6,6 +6,7 @@ import productRouter from './Product';
 import employeeRouter from './Employee';
 import beneficiaryRouter from './Beneficiary';
 import psIntakeRouter from './PsIntake'
+import psServiceRouter from './PsService'
 
 const router = express.Router();
 router.use('/users', userRouter)
@@ -15,5 +16,6 @@ router.use('/orders', orderRouter)
 router.use('/employees', employeeRouter)
 router.use('/beneficiaries', beneficiaryRouter)
 router.use('/ps-intakes', psIntakeRouter)
+router.use('/ps-services', psServiceRouter)
 
 export default router;

@@ -1,26 +1,26 @@
 import express from 'express';
 import verifyAuthToken from '../middlewares/AuthMiddleware'
 
-import * as controller from '../controllers/PsIntake'
+import * as psIntakeController from '../controllers/PsIntake'
 
 const psIntakeRouter = express.Router();
 
-psIntakeRouter.get('/', controller.index)
+psIntakeRouter.get('/', psIntakeController.index)
 
-psIntakeRouter.get('/:psIntakeId', controller.show)
-psIntakeRouter.get('/:psIntakeId/details', controller.getDetails)
+psIntakeRouter.get('/:psIntakeId', psIntakeController.show)
+psIntakeRouter.get('/:psIntakeId/details', psIntakeController.getDetails)
 
-psIntakeRouter.post('/', verifyAuthToken, controller.create) 
+psIntakeRouter.post('/', verifyAuthToken, psIntakeController.create) 
 
-psIntakeRouter.put('/:psIntakeId', verifyAuthToken, controller.update) 
+psIntakeRouter.put('/:psIntakeId', verifyAuthToken, psIntakeController.update) 
 
-psIntakeRouter.delete('/:psIntakeId', verifyAuthToken, controller.destroy)
+psIntakeRouter.delete('/:psIntakeId', verifyAuthToken, psIntakeController.destroy)
 
 
 
-psIntakeRouter.put('/:psIntakeId/beneficiaries/:beneficiaryId', controller.updateIsDirect)
+psIntakeRouter.put('/:psIntakeId/beneficiaries/:beneficiaryId', psIntakeController.updateIsDirect)
 
-psIntakeRouter.post('/:psIntakeId/beneficiaries', controller.addBeneficiary)
-
+psIntakeRouter.post('/:psIntakeId/beneficiaries', psIntakeController.addBeneficiary)
+psIntakeRouter.post('/:psIntakeId/beneficiaries/:beneficiaryId/services', psIntakeController.addService)
 
 export default psIntakeRouter;
