@@ -16,8 +16,8 @@ const index = async (_req: Request, res: Response, next:NextFunction) => {
 
 const show = async (req: Request, res: Response, next:NextFunction) => {
     try {
-        const product = await beneficiaryModel.show(req.params.productId)
-        res.json(product)
+        const beneficiary = await beneficiaryModel.show(req.params.beneficiaryId)
+        res.json(beneficiary)
     } catch (err) {
         next(err)
     }
