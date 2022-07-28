@@ -33,7 +33,7 @@ export class PsIntakeBeneficiaryQueries {
     }
 
     
-    async BeneficiaryPsServices(beneficiaryId, PsIntakeId): Promise<{ name: string, price: number, order_id: string }[]> {
+    async BeneficiaryPsServices(beneficiaryId: number, PsIntakeId: number): Promise<{ name: string, price: number, order_id: string }[]> {
         try {
             
             // get services for a specific day
@@ -64,7 +64,7 @@ export class PsIntakeBeneficiaryQueries {
         }
     }
 
-    async BeneficiaryPsProblems(beneficiaryId, PsIntakeId): Promise<{ name: string, price: number, order_id: string }[]> {
+    async BeneficiaryPsProblems(beneficiaryId: number, PsIntakeId: number): Promise<{ name: string, price: number, order_id: string }[]> {
         try {
             
             // get problems for a specific beneficiary (for all psIntakes)
@@ -94,7 +94,7 @@ export class PsIntakeBeneficiaryQueries {
         }
     }
 
-    async psIntakesStats(beneficiaryId, PsIntakeId): Promise<{ name: string, price: number, order_id: string }[]> {
+    async psIntakesStats(beneficiaryId: number, PsIntakeId: number): Promise<{ name: string, price: number, order_id: string }[]> {
         try {
             
             // get problems for a specific beneficiary (for all psIntakes)
