@@ -21,7 +21,7 @@ export default class OrderModel {
         }
     }
 
-    async show(id: string): Promise<Order | null> {
+    async show(id: number): Promise<Order | null> {
         try {
             
             const connection = await pool.connect();
@@ -48,7 +48,7 @@ export default class OrderModel {
         }
     }
 
-    async update(id: string, order: Omit<Order, "id">): Promise<Order> {
+    async update(id: number, order: Omit<Order, "id">): Promise<Order> {
         try {
             
             const connection = await pool.connect();
@@ -62,7 +62,7 @@ export default class OrderModel {
         }
     }
 
-    async delete(id: string): Promise<Order> {
+    async delete(id: number): Promise<Order> {
         try {
             
             const connection = await pool.connect();
@@ -75,7 +75,7 @@ export default class OrderModel {
             throw new Error(`Could not delete order ${id}. Error:  ${(err as Error).message}`)
         }
     }
-    async addProduct(orderId: string, productId: string, quantity: string) {
+    async addProduct(orderId: number, productId: number, quantity: number) {
         try {
             const order = await this.show(orderId)
             if(order?.status !== 'open'){

@@ -21,7 +21,8 @@ export default class BeneficiaryModel {
         }
     }
 
-    async show(id: string): Promise<BaseBeneficiary> {
+
+    async show(id: number): Promise<BaseBeneficiary> {
         try {
             const connection = await pool.connect();
             const sql = 'SELECT * FROM beneficiaries WHERE id=($1)';
@@ -51,7 +52,7 @@ export default class BeneficiaryModel {
     }
 
 
-    async update(beneficiaryId: string, beneficiary: BaseBeneficiary): Promise<BaseBeneficiary> {
+    async update(beneficiaryId: number, beneficiary: BaseBeneficiary): Promise<BaseBeneficiary> {
         try {
             const connection = await pool.connect();
             const sql = "UPDATE beneficiaries SET name = $1, file_id = $2 WHERE id = $3 RETURNING *";
@@ -64,7 +65,7 @@ export default class BeneficiaryModel {
         }
     }
 
-    async delete(beneficiaryId: string): Promise<BaseBeneficiary> {
+    async delete(beneficiaryId: number): Promise<BaseBeneficiary> {
         try {
             const connection = await pool.connect();
             const sql = "DELETE FROM beneficiaries WHERE id=$1 RETURNING *";
@@ -76,6 +77,8 @@ export default class BeneficiaryModel {
             throw new Error(`Could not delete beneficiary ${beneficiaryId}. Error:  ${(err as Error).message}`)
         }
     }
+
+
 
 }
 

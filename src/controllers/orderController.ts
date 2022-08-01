@@ -16,7 +16,7 @@ const index = async (_req: Request, res: Response, next: NextFunction) => {
 
 const show = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const order = await orderModel.show(req.params.orderId)
+        const order = await orderModel.show(Number(req.params.orderId))
         res.json(order)
     } catch (err) {
         next(err)
@@ -40,10 +40,10 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 const update = async (req: Request, res: Response, next: NextFunction) => {
     const order: Order = {
         status: req.body.status,
-        user_id: req.body.user_id,
+        user_id: Number(req.body.user_id),
     }
     try {
-        const updatedOrder = await orderModel.update(req.params.orderId, order)
+        const updatedOrder = await orderModel.update(Number(req.params.orderId), order)
         res.json(updatedOrder)
     } catch(err) {
         next(err)
@@ -52,7 +52,7 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
 
 const destroy = async (req: Request, res: Response, next: NextFunction) => {
 try {
-    const deleted = await orderModel.delete(req.params.orderId)
+    const deleted = await orderModel.delete(Number(req.params.orderId))
     res.json(deleted)
     } catch (err) {
         next(err)
@@ -60,9 +60,9 @@ try {
 }
 
 const addProduct = async (req: Request, res: Response, next:NextFunction) => {
-    const orderId: string = req.params.orderId  // getting orderId from params
-    const productId: string = req.body.productId
-    const quantity: string = req.body.quantity
+    const orderId = Number(req.params.orderId)  // getting orderId from params
+    const productId = Number(req.body.productId)
+    const quantity = Number(req.body.quantity)
     
     try {
         const addedProduct = await orderModel.addProduct(orderId, productId, quantity)
@@ -75,9 +75,9 @@ const addProduct = async (req: Request, res: Response, next:NextFunction) => {
 }
 
 const getCurrentOrder = async (req: Request, res: Response, next:NextFunction) => {
-    const orderId: string = req.params.orderId  // getting orderId from params
-    const productId: string = req.body.productId
-    const quantity: string = req.body.quantity
+    const orderId = Number(req.params.orderId)  // getting orderId from params
+    const productId = Number(req.body.productId)
+    const quantity = Number(req.body.quantity)
     
     try {
         const addedProduct = await orderModel.addProduct(orderId, productId, quantity)

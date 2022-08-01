@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import PsIntakeModel from '../models/PsIntake'
 
 import { BasePsIntake } from '../models/PsIntake'
-import { psIntakeService } from '../services/PsIntake'
+import { psIntakeService } from '../services/PsIntakeService'
 
 const psIntakeModel = new PsIntakeModel()
 
@@ -17,7 +17,7 @@ const index = async (_req: Request, res: Response, next: NextFunction) => {
 
 const show = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const psIntake = await psIntakeModel.show(Number(req.params.psIntakeId))
+        const psIntake = await psIntakeService.getOne(Number(req.params.psIntakeId))
         res.json(psIntake)
     } catch (err) {
         next(err)
@@ -67,7 +67,7 @@ const addBeneficiary = async (_req: Request, res: Response, next: NextFunction) 
     const isDirect: number = Number(_req.body.is_direct)
 
     try {
-        const addedProduct = await psIntakeModel.addBeneficiary(isDirect, psIntakeId, beneficiaryId)
+        const addedProduct = await psIntakeService.addBeneficiary(isDirect, psIntakeId, beneficiaryId)
         res.json(addedProduct)
     } catch (err) {
         next(err)
@@ -80,7 +80,7 @@ const updateIsDirect = async (_req: Request, res: Response, next: NextFunction) 
     const isDirect: number = Number(_req.body.is_direct)
 
     try {
-        const updatedIsDirect = await psIntakeModel.updateIsDirect(psIntakeId, beneficiaryId, isDirect)
+        const updatedIsDirect = await psIntakeService.updateIsDirect(psIntakeId, beneficiaryId, isDirect)
         res.json({
             'is_direct': updatedIsDirect
         })
@@ -89,14 +89,6 @@ const updateIsDirect = async (_req: Request, res: Response, next: NextFunction) 
     }
 }
 
-const getDetails = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const psIntake = await psIntakeService.getDetails(Number(req.params.psIntakeId))
-        res.json(psIntake)
-    } catch (err) {
-        next(err)
-    }
-}
 
 export {
     index,
@@ -105,6 +97,5 @@ export {
     update,
     destroy,
     addBeneficiary,
-    getDetails,
     updateIsDirect
 }

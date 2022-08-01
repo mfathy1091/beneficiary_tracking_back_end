@@ -16,7 +16,7 @@ const index = async (_req: Request, res: Response, next:NextFunction) => {
 
 const show = async (req: Request, res: Response, next:NextFunction) => {
     try {
-        const psService = await psServiceModel.show(req.params.psServiceId)
+        const psService = await psServiceModel.show(Number(req.params.psServiceId))
         res.json(psService)
     } catch (err) {
         next(err)
@@ -47,7 +47,7 @@ const update = async (req: Request, res: Response, next:NextFunction) => {
         ps_intake_id: Number(req.body.ps_intake_id),
     }
     try {
-        const updatedPsService = await psServiceModel.update(req.params.psServiceId, psService)
+        const updatedPsService = await psServiceModel.update(Number(req.params.psServiceId), psService)
         res.json(updatedPsService)
     } catch(err) {
         next(err)    
@@ -56,7 +56,7 @@ const update = async (req: Request, res: Response, next:NextFunction) => {
 
 const destroy = async (req: Request, res: Response, next:NextFunction) => {
     try {
-        const deletedPsService = await psServiceModel.delete(req.params.psServiceId)
+        const deletedPsService = await psServiceModel.delete(Number(req.params.psServiceId))
         res.json(deletedPsService)
     } catch (err) {
         next(err)

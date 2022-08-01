@@ -1,16 +1,20 @@
 import express from 'express';
-import userRouter from './User';
-import authRouter from './Auth';
-import orderRouter from './Order';
-import productRouter from './Product';
-import employeeRouter from './Employee';
-import beneficiaryRouter from './Beneficiary';
-import psIntakeRouter from './PsIntake'
-import psServiceRouter from './PsService'
+import userRouter from './userRouter';
+import orderRouter from './orderRouter';
+import productRouter from './productRouter';
+import employeeRouter from './employeeRouter';
+import beneficiaryRouter from './beneficiaryRouter';
+import psIntakeRouter from './psIntakeRouter'
+import psServiceRouter from './psServiceRouter'
+import * as authController from '../controllers/authController'
 
 const router = express.Router();
+
+router.post('/register', authController.register)
+router.post('/login', authController.login)
+
+
 router.use('/users', userRouter)
-router.use('/auth', authRouter)
 router.use('/products', productRouter)
 router.use('/orders', orderRouter)
 router.use('/employees', employeeRouter)

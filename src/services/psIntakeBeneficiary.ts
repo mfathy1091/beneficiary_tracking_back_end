@@ -4,10 +4,14 @@ import pool from '../config/database'
 export class PsIntakeBeneficiaryQueries {
     // BeneficiaryProblems -> ps / housing / health
 
+    // (1) getAllBeneficiariesInPsIntake
+    // (2) addBeneficiariesToPsIntake
+    // (3) removeBeneficiariesFromPsIntake
+    // (4) updateIsDirect
 
 
     // Get all products that have been included in orders
-    async BeneficiariesInPsIntake(): Promise<{ name: string, price: number, order_id: string }[]> {
+    async getBeneficiariesInPsIntake(): Promise<{ name: string, price: number, order_id: string }[]> {
         try {
             //@ts-ignore
             const conn = await pool.connect()

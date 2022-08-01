@@ -37,7 +37,7 @@ export default class UserModel {
         try {
             
             const conn = await pool.connect()
-            const sql = 'INSERT INTO users (username, password) VALUES($1, $2) RETURNING *'
+            const sql = 'INSERT INTO users (username, password) VALUES($1, $2) RETURNING id, username'
             const result = await conn.query(sql, [user.username, user.password])
             const newUser = result.rows[0]
 

@@ -22,7 +22,7 @@ export default class EmployeeModel {
         }
     }
 
-    async show(id: string): Promise<BaseEmployee> {
+    async show(id: number): Promise<BaseEmployee> {
         try {
             const connection = await pool.connect();
             const sql = 'SELECT * FROM employees WHERE id=($1)';
@@ -52,7 +52,7 @@ export default class EmployeeModel {
     }
 
 
-    async update(employeeId: string, employee: BaseEmployee): Promise<BaseEmployee> {
+    async update(employeeId: number, employee: BaseEmployee): Promise<BaseEmployee> {
         try {
             const connection = await pool.connect();
             const sql = "UPDATE employees SET name = $1, email = $2, user_id = $3 WHERE id = $4 RETURNING *";
@@ -65,7 +65,7 @@ export default class EmployeeModel {
         }
     }
 
-    async delete(employeeId: string): Promise<BaseEmployee> {
+    async delete(employeeId: number): Promise<BaseEmployee> {
         try {
             const connection = await pool.connect();
             const sql = "DELETE FROM employees WHERE id=$1 RETURNING *";

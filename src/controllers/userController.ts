@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import UserModel from '../models/User'
-import { hashPassword } from '../utils/hashing'
 import { BaseUser } from '../models/User'
-import jwt from 'jsonwebtoken'
 
 
 const userModel = new UserModel()
@@ -25,26 +23,7 @@ const show = async (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
-const create = async (req: Request, res: Response, next: NextFunction) => {
-    const hashedPassword = await hashPassword(req.body.password)
-    const user: BaseUser = {
-        username: req.body.username,
-        password: hashedPassword as string
-    }
-    try {
-        const newUser = await userModel.create(user)
-        let token = jwt.sign({ user: newUser }, process.env.TOKEN_SECRET as unknown as string)
-        res.status(201)
-        res.json({
-            'message': 'Successfuly created!',
-            'user': user,
-            'token': token
-        })
 
-    } catch(err) {
-        next(err)
-    }
-}
 
 const update = async (req: Request, res: Response, next:NextFunction) => {
     const user: Omit<BaseUser, "id"> = {
@@ -72,7 +51,6 @@ const destroy = async (req: Request, res: Response, next:NextFunction) => {
 export {
     index,
     show,
-    create,
     update,
     destroy,
 }

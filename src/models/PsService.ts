@@ -23,7 +23,7 @@ export default class PsServiceModel {
         }
     }
 
-    async show(id: string): Promise<BasePsService> {
+    async show(id: number): Promise<BasePsService> {
         try {
             const connection = await pool.connect();
             const sql = 'SELECT * FROM ps_services WHERE id=($1)';
@@ -53,7 +53,7 @@ export default class PsServiceModel {
     }
 
 
-    async update(psServiceId: string, psService: BasePsService): Promise<BasePsService> {
+    async update(psServiceId: number, psService: BasePsService): Promise<BasePsService> {
         try {
             const connection = await pool.connect();
             const sql = "UPDATE ps_services SET service_name = $1, service_date = $2, beneficiary_id = $3, ps_intake_id = $4 WHERE id = $5 RETURNING *";
@@ -66,7 +66,7 @@ export default class PsServiceModel {
         }
     }
 
-    async delete(psServiceId: string): Promise<BasePsService> {
+    async delete(psServiceId: number): Promise<BasePsService> {
         try {
             const connection = await pool.connect();
             const sql = "DELETE FROM ps_services WHERE id=$1 RETURNING *";

@@ -26,17 +26,17 @@ interface Error {
     status?: number,
 }
 
-app.use((_req: Request, res: Response, next: NextFunction) => {
-    const error: Error = {
-        status: 404,
-        message: 'Not found'
-    }
-    next(error)
-})
+
+
+
 
 app.use(ErrorHandler);
 
-
+app.use((_req: Request, res: Response) => {
+    res.status(404).json({
+        message: 'Not Found'
+    })
+})
 
 app.listen(process.env.NODE_PORT, function () {
     console.log(`starting app on: ${address}`)
