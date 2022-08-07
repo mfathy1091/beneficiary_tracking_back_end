@@ -1,17 +1,20 @@
 import express from 'express';
-import userRouter from './userRouter';
-import orderRouter from './orderRouter';
-import productRouter from './productRouter';
-import employeeRouter from './employeeRouter';
-import beneficiaryRouter from './beneficiaryRouter';
-import psIntakeRouter from './psIntakeRouter'
-import psServiceRouter from './psServiceRouter'
-import * as authController from '../controllers/authController'
+import userRouter from './user.routes';
+import orderRouter from './order.routes';
+import productRouter from './product.routes';
+import employeeRouter from './employee.routes';
+import beneficiaryRouter from './beneficiary.routes';
+import psIntakeRouter from './psIntake.routes'
+import psServiceRouter from './psService.routes'
+import * as authController from '../controllers/auth.controllers'
+import { registerSchema } from '../schema/register.schema';
+import { validateRequestSchema } from '../middlewares/validate-request-schema';
+import { loginSchema } from '../schema/login.schema';
 
 const router = express.Router();
 
-router.post('/register', authController.register)
-router.post('/login', authController.login)
+router.post('/register', registerSchema, validateRequestSchema, authController.register)
+router.post('/login', loginSchema, validateRequestSchema, authController.login)
 
 
 router.use('/users', userRouter)

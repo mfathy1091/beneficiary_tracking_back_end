@@ -1,7 +1,7 @@
 import express from 'express';
-import verifyAuthToken from '../middlewares/authMiddleware'
+import verifyAuthToken from '../middlewares/checkAuth.middleware'
 
-import * as controller from '../controllers/employeeController'
+import * as controller from '../controllers/employee.controllers'
 
 const router = express.Router();
 

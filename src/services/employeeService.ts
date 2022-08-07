@@ -1,4 +1,4 @@
-import pool from "../config/database";
+import pool from "../config/db.config";
 
 export default class EmployeeService {
     async getAll({}, page: number, limit: number) {

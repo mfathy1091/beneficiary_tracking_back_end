@@ -1,5 +1,5 @@
 //@ts-ignore
-import pool from '../config/database'
+import pool from '../config/db.config'
 
 export class PsIntakeBeneficiaryQueries {
     // BeneficiaryProblems -> ps / housing / health

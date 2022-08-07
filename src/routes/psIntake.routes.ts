@@ -1,8 +1,8 @@
 import express from 'express';
-import verifyAuthToken from '../middlewares/authMiddleware'
+import verifyAuthToken from '../middlewares/checkAuth.middleware'
 
-import * as psIntakeController from '../controllers/psIntakeController'
-import * as beneficiaryController from '../controllers/beneficiaryController'
+import * as psIntakeController from '../controllers/psIntake.controllers'
+import * as beneficiaryController from '../controllers/beneficiary.controllers'
 import { psIntakeService } from '../services/PsIntakeService';
 
 const router = express.Router();

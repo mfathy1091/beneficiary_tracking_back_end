@@ -1,4 +1,4 @@
-import pool from '../config/database';
+import pool from '../config/db.config';
 export type BaseUser = {
     id?: number,
     username: string,

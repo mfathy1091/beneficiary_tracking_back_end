@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction} from 'express'
-import TokenService from '../services/tokenService'
+import AuthService from '../services/authService'
 
-const tokenService = new TokenService;
+const authService = new AuthService()
 
 const AuthMiddleware = (req: Request, res: Response, next:NextFunction) => {
     try {
@@ -10,7 +10,7 @@ const AuthMiddleware = (req: Request, res: Response, next:NextFunction) => {
             return res.status(401).send('Not Authorized')
         }
         const token = authorizationHeader.split(' ')[1]
-        const decoded = tokenService.verifyToken(token)
+        const decoded = authService.verifyToken(token)
 
         next() // No error proceed to next middleware
     } catch (err) {

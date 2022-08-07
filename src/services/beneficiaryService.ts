@@ -1,4 +1,4 @@
-import pool from '../config/database'
+import pool from '../config/db.config'
 import { BaseBeneficiary } from '../models/Beneficiary';
 
 export default class BeneficiaryService {
