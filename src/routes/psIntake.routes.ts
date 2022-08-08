@@ -3,14 +3,13 @@ import verifyAuthToken from '../middlewares/checkAuth.middleware'
 
 import * as psIntakeController from '../controllers/psIntake.controllers'
 import * as beneficiaryController from '../controllers/beneficiary.controllers'
-import { psIntakeService } from '../services/PsIntakeService';
 
 const router = express.Router();
 
 router.get('/', psIntakeController.index)
 
 router.get('/:psIntakeId', psIntakeController.show)
-router.get('/:psIntakeId/details', psIntakeService.getOne)
+router.get('/:psIntakeId/details', psIntakeController.getOne)
 
 router.post('/', verifyAuthToken, psIntakeController.create) 
 
