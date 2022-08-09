@@ -95,8 +95,17 @@ const updateIsDirect = async (_req: Request, res: Response, next: NextFunction) 
     } catch (err) {
         next(err)
     }
+    
 }
 
+const getOne = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const psIntake = await psIntakeService.getOne(Number(req.params.psIntakeId))
+        res.json(psIntake)
+    } catch (err) {
+        next(err)
+    }
+}
 
 export {
     index,
