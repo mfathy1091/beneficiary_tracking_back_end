@@ -10,7 +10,7 @@ const router = express.Router();
 router.get('/', psIntakeController.index)
 
 router.get('/:psIntakeId', psIntakeController.show)
-router.get('/:psIntakeId/details', psIntakeService.getOne)
+router.get('/:psIntakeId/details', psIntakeController.getOne) 
 
 router.post('/', verifyAuthToken, psIntakeController.create) 
 
