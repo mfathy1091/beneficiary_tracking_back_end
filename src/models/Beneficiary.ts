@@ -68,7 +68,7 @@ export default class BeneficiaryModel {
     async delete(beneficiaryId: number): Promise<BaseBeneficiary> {
         try {
             const connection = await pool.connect();
-            const sql = "DELETE FROM beneficiaries WHERE id=$1 RETURNING *";
+            const sql = "DELETE FROM beneficiaries WHERE id=$1 LIMIT 10 RETURNING *";
             const result = await connection.query(sql, [beneficiaryId]);
             connection.release();
             const deletedBeneficiary = result.rows[0];

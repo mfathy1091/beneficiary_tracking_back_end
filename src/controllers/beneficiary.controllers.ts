@@ -8,6 +8,7 @@ const beneficiaryModel = new BeneficiaryModel()
 const beneficiaryService = new BeneficiaryService()
 
 const getAll = async (_req: Request, res: Response, next:NextFunction) => {
+    const query = _req.query.q
     try {
         const beneficiaries = await beneficiaryModel.index()
         res.json(beneficiaries)
