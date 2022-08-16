@@ -1,6 +1,7 @@
 import express from 'express';
 import verifyAuthToken from '../middlewares/checkAuth.middleware'
-
+import { beneficiarySchema } from '../schema/beneficiary.schema';
+import { validateRequestSchema } from '../middlewares/validate-request-schema';
 import * as beneficiaryController from '../controllers/beneficiary.controllers'
 
 const router = express.Router();
@@ -9,7 +10,7 @@ router.get('/', beneficiaryController.getAll)
 
 router.get('/:beneficiaryId', beneficiaryController.getOne)
 
-router.post('/', verifyAuthToken, beneficiaryController.createOne) 
+router.post('/', verifyAuthToken, beneficiarySchema, validateRequestSchema, beneficiaryController.createOne) 
 
 router.put('/:beneficiaryId', verifyAuthToken, beneficiaryController.updateOne) 
 

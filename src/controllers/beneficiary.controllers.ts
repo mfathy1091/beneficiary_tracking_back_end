@@ -8,9 +8,10 @@ const beneficiaryModel = new BeneficiaryModel()
 const beneficiaryService = new BeneficiaryService()
 
 const getAll = async (_req: Request, res: Response, next:NextFunction) => {
-    const query = _req.query.q
+    const stringToSearch = _req.query.stringToSearch
+
     try {
-        const beneficiaries = await beneficiaryModel.index()
+        const beneficiaries = await beneficiaryModel.index(stringToSearch as string)
         res.json(beneficiaries)
     } catch (err) {
         next(err)
@@ -38,8 +39,10 @@ const getOne = async (req: Request, res: Response, next:NextFunction) => {
 
 const createOne = async (req: Request, res: Response, next:NextFunction) => {
     const beneficiary: Omit<BaseBeneficiary, 'id'> = {
-        name: req.body.name,
-        file_id: Number(req.body.file_id),
+        full_name: req.body.fullName,
+        file_number: req.body.fileNumber,
+        individual_number: req.body.individualNumber,
+        passport_number: req.body.passportNumber,
     }
     try {
         const newBeneficiary = await beneficiaryModel.create(beneficiary)
@@ -52,8 +55,10 @@ const createOne = async (req: Request, res: Response, next:NextFunction) => {
 
 const updateOne = async (req: Request, res: Response, next:NextFunction) => {
     const beneficiary: Omit<BaseBeneficiary, "id"> = {
-        name: req.body.name,
-        file_id: Number(req.body.file_id),
+        full_name: req.body.fullName,
+        file_number: req.body.fileNumber,
+        individual_number: req.body.individualNumber,
+        passport_number: req.body.passportNumber,
     }
     try {
         const updatedBeneficiary = await beneficiaryModel.update(Number(req.params.beneficiaryId), beneficiary)

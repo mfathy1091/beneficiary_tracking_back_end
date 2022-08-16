@@ -2,16 +2,24 @@ import pool from '../config/db.config'
 
 export type BaseBeneficiary = {
     id?: number,
-    name: string,
-    file_id: number
+    full_name: string,
+    file_number: string,
+    individual_number?: string
+    passport_number?: string
 }
 
 export default class BeneficiaryModel {
-    async index(): Promise<BaseBeneficiary[]> {
+    async index(stringToSearch:string ): Promise<BaseBeneficiary[]> {
         const connection = await pool.connect();
         try {
-            const sql = `SELECT * FROM beneficiaries`;
-            const result = await connection.query(sql);
+            const sql = `
+            SELECT * FROM beneficiaries 
+            WHERE full_name ILIKE $1 
+            OR file_number ILIKE $1
+            OR individual_number ILIKE $1
+            OR passport_number ILIKE $1
+            `;
+            const result = await connection.query(sql, [`%${stringToSearch}%`]);
 
             return result.rows;
         } catch (err) {
@@ -36,18 +44,17 @@ export default class BeneficiaryModel {
 
     async create(beneficiary: BaseBeneficiary): Promise<BaseBeneficiary> {
         try {
-
+            console.log(beneficiary)
             const conn = await pool.connect()
-            const sql = 'INSERT INTO beneficiaries (name, file_id) VALUES($1, $2) RETURNING *'
-            const result = await conn.query(sql, [beneficiary.name, beneficiary.file_id])
+            const sql = 'INSERT INTO beneficiaries (full_name, file_number, individual_number, passport_number) VALUES($1, $2, $3, $4) RETURNING *'
+            const result = await conn.query(sql, [beneficiary.full_name, beneficiary.file_number, beneficiary.individual_number, beneficiary.passport_number])
             const newBeneficiary = result.rows[0]
-
             conn.release()
-
+            console.log(newBeneficiary)
             return newBeneficiary
         } catch (err) {
             console.log(err)
-            throw new Error(`unable create beneficiary (${beneficiary.name}): ${(err as Error).message} `)
+            throw new Error(`unable create beneficiary (${beneficiary.full_name}): ${(err as Error).message} `)
         }
     }
 
@@ -55,8 +62,8 @@ export default class BeneficiaryModel {
     async update(beneficiaryId: number, beneficiary: BaseBeneficiary): Promise<BaseBeneficiary> {
         try {
             const connection = await pool.connect();
-            const sql = "UPDATE beneficiaries SET name = $1, file_id = $2 WHERE id = $3 RETURNING *";
-            const result = await connection.query(sql, [beneficiary.name, beneficiary.file_id, beneficiaryId]);
+            const sql = "UPDATE beneficiaries SET full_name = $1, file_number = $2, individual_number=$3, passport_number=$4 WHERE id = $5 RETURNING *";
+            const result = await connection.query(sql, [beneficiary.full_name, beneficiary.file_number, beneficiary.individual_number, beneficiary.passport_number, beneficiaryId]);
             connection.release();
             const updatedBeneficiary = result.rows[0];
             return updatedBeneficiary;

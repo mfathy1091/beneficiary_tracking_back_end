@@ -8,8 +8,11 @@ import psIntakeRouter from './psIntake.routes'
 import psServiceRouter from './psService.routes'
 import * as authController from '../controllers/auth.controllers'
 import { registerSchema } from '../schema/register.schema';
-import { validateRequestSchema } from '../middlewares/validate-request-schema';
 import { loginSchema } from '../schema/login.schema';
+import { beneficiarySchema } from '../schema/beneficiary.schema';
+
+import { validateRequestSchema } from '../middlewares/validate-request-schema';
+
 
 const router = express.Router();
 
