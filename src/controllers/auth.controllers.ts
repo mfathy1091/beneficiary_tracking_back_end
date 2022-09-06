@@ -12,6 +12,7 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
     const user: BaseUser = {
         username: req.body.username,
         password: req.body.password,
+        role_id: Number(req.body.role_id),
     }
 
     try {

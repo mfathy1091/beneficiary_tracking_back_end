@@ -57,7 +57,12 @@ export default class AuthService {
         try {
             // (1) Check if user exists
             const conn = await pool.connect()
-            const sql = 'SELECT * FROM users WHERE username=($1)'
+            const sql = `
+                SELECT *
+                FROM users 
+                Join roles ON users.role_id = roles.id
+                WHERE username=($1)
+                `
         
             const result = await conn.query(sql, [username])
             if(result.rows.length){

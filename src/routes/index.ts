@@ -1,4 +1,5 @@
 import express from 'express';
+import roleRouter from './role.routes';
 import userRouter from './user.routes';
 import orderRouter from './order.routes';
 import productRouter from './product.routes';
@@ -19,7 +20,7 @@ const router = express.Router();
 router.post('/register', registerSchema, validateRequestSchema, authController.register)
 router.post('/login', loginSchema, validateRequestSchema, authController.login)
 
-
+router.use('/roles', roleRouter)
 router.use('/users', userRouter)
 router.use('/products', productRouter)
 router.use('/orders', orderRouter)
