@@ -1,15 +1,15 @@
 import { NextFunction, Request, Response } from 'express'
-import PsIntakeModel from '../models/PsIntake'
+import PsCaseModel from '../models/PsCase'
 
-import { BasePsIntake } from '../models/PsIntake'
-import { psIntakeService } from '../services/PsIntakeService'
+import { BasePsCase } from '../models/PsCase'
+import { psCaseService } from '../services/PsCaseService'
 
-const psIntakeModel = new PsIntakeModel()
+const psCaseModel = new PsCaseModel()
 
 const index = async (_req: Request, res: Response, next: NextFunction) => {
     try {
-        const psIntakes = await psIntakeModel.index()
-        res.json(psIntakes)
+        const psCases = await psCaseModel.index()
+        res.json(psCases)
     } catch (err) {
         next(err)
     }
@@ -17,8 +17,8 @@ const index = async (_req: Request, res: Response, next: NextFunction) => {
 
 const show = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const psIntake = await psIntakeService.getOne(Number(req.params.psIntakeId))
-        res.json(psIntake)
+        const psCase = await psCaseService.getOne(Number(req.params.psCaseId))
+        res.json(psCase)
     } catch (err) {
         next(err)
     }
@@ -26,27 +26,27 @@ const show = async (req: Request, res: Response, next: NextFunction) => {
 
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
-    const psIntake: Omit<BasePsIntake, 'id'> = {
+    const psCase: Omit<BasePsCase, 'id'> = {
         referral_source: req.body.referral_source,
         employee_id: req.body.employee_id,
     }
     try {
-        const newPsIntake = await psIntakeModel.create(psIntake)
+        const newPsCase = await psCaseModel.create(psCase)
         res.status(201)
-        res.json(newPsIntake)
+        res.json(newPsCase)
     } catch (err) {
         next(err)
     }
 }
 
 const update = async (req: Request, res: Response, next: NextFunction) => {
-    const psIntake: Omit<BasePsIntake, "id"> = {
+    const psCase: Omit<BasePsCase, "id"> = {
         referral_source: req.body.referral_source,
         employee_id: req.body.employee_id,
     }
     try {
-        const updatedPsIntake = await psIntakeModel.update(Number(req.params.psIntakeId), psIntake)
-        res.json(updatedPsIntake)
+        const updatedPsCase = await psCaseModel.update(Number(req.params.psCaseId), psCase)
+        res.json(updatedPsCase)
     } catch (err) {
         next(err)
     }
@@ -54,20 +54,20 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
 
 const destroy = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const deletedPsIntake = await psIntakeModel.delete(Number(req.params.psIntakeId))
-        res.json(deletedPsIntake)
+        const deletedPsCase = await psCaseModel.delete(Number(req.params.psCaseId))
+        res.json(deletedPsCase)
     } catch (err) {
         next(err)
     }
 }
 
 const addBeneficiary = async (_req: Request, res: Response, next: NextFunction) => {
-    const psIntakeId: number = Number(_req.params.psIntakeId)
+    const psCaseId: number = Number(_req.params.psCaseId)
     const beneficiaryId: number = Number(_req.body.beneficiary_id)
     const isDirect: number = Number(_req.body.is_direct)
 
     try {
-        const addedProduct = await psIntakeService.addBeneficiary(isDirect, psIntakeId, beneficiaryId)
+        const addedProduct = await psCaseService.addBeneficiary(isDirect, psCaseId, beneficiaryId)
         res.json(addedProduct)
     } catch (err) {
         next(err)
@@ -75,12 +75,12 @@ const addBeneficiary = async (_req: Request, res: Response, next: NextFunction) 
 }
 
 const updateIsDirect = async (_req: Request, res: Response, next: NextFunction) => {
-    const psIntakeId: number = Number(_req.params.psIntakeId)
+    const psCaseId: number = Number(_req.params.psCaseId)
     const beneficiaryId: number = Number(_req.params.beneficiaryId)
     const isDirect: number = Number(_req.body.is_direct)
 
     try {
-        const updatedIsDirect = await psIntakeService.updateIsDirect(psIntakeId, beneficiaryId, isDirect)
+        const updatedIsDirect = await psCaseService.updateIsDirect(psCaseId, beneficiaryId, isDirect)
         res.json({
             'is_direct': updatedIsDirect
         })
@@ -92,8 +92,8 @@ const updateIsDirect = async (_req: Request, res: Response, next: NextFunction) 
 
 const getOne = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const psIntake = await psIntakeService.getOne(Number(req.params.psIntakeId))
-        res.json(psIntake)
+        const psCase = await psCaseService.getOne(Number(req.params.psCaseId))
+        res.json(psCase)
     } catch (err) {
         next(err)
     }

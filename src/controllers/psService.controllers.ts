@@ -28,7 +28,7 @@ const create = async (req: Request, res: Response, next:NextFunction) => {
         service_name: req.body.service_name,
         service_date: req.body.service_date,
         beneficiary_id: Number(req.body.beneficiary_id),
-        ps_intake_id: Number(req.body.ps_intake_id),
+        ps_case_id: Number(req.body.ps_case_id),
     }
     try {
         const newPsService = await psServiceModel.create(psService)
@@ -44,7 +44,7 @@ const update = async (req: Request, res: Response, next:NextFunction) => {
         service_name: req.body.service_name,
         service_date: req.body.service_date,
         beneficiary_id: Number(req.body.beneficiary_id),
-        ps_intake_id: Number(req.body.ps_intake_id),
+        ps_case_id: Number(req.body.ps_case_id),
     }
     try {
         const updatedPsService = await psServiceModel.update(Number(req.params.psServiceId), psService)

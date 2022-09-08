@@ -1,16 +1,16 @@
 import pool from '../config/db.config'
 
-export type BasePsIntake = {
+export type BasePsCase = {
     id?: number,
     referral_source: string,
     employee_id: number
 }
 
 export default class PsIntakeModel {
-    async index(): Promise<BasePsIntake[]> {
+    async index(): Promise<BasePsCase[]> {
         const connection = await pool.connect();
         try {
-            const sql = `SELECT * FROM ps_intakes`;
+            const sql = `SELECT * FROM ps_cases`;
             const result = await connection.query(sql);
 
             return result.rows;
@@ -21,11 +21,11 @@ export default class PsIntakeModel {
         }
     }
 
-    async create(psIntake: BasePsIntake): Promise<BasePsIntake> {
+    async create(psIntake: BasePsCase): Promise<BasePsCase> {
         try {
 
             const conn = await pool.connect()
-            const sql = 'INSERT INTO ps_intakes (referral_source, employee_id) VALUES($1, $2) RETURNING *'
+            const sql = 'INSERT INTO ps_cases (referral_source, employee_id) VALUES($1, $2) RETURNING *'
             const result = await conn.query(sql, [psIntake.referral_source, psIntake.employee_id])
             const newPsIntake = result.rows[0]
 
@@ -39,10 +39,10 @@ export default class PsIntakeModel {
     }
 
 
-    async update(psIntakeId: number, psIntake: BasePsIntake): Promise<BasePsIntake> {
+    async update(psIntakeId: number, psIntake: BasePsCase): Promise<BasePsCase> {
         try {
             const connection = await pool.connect();
-            const sql = "UPDATE ps_intakes SET referral_source = $1, employee_id = $2 WHERE id = $3 RETURNING *";
+            const sql = "UPDATE ps_cases SET referral_source = $1, employee_id = $2 WHERE id = $3 RETURNING *";
             const result = await connection.query(sql, [psIntake.referral_source, psIntake.employee_id, psIntakeId]);
             connection.release();
             const updatedPsIntake = result.rows[0];
@@ -52,10 +52,10 @@ export default class PsIntakeModel {
         }
     }
 
-    async delete(psIntakeId: number): Promise<BasePsIntake> {
+    async delete(psIntakeId: number): Promise<BasePsCase> {
         try {
             const connection = await pool.connect();
-            const sql = "DELETE FROM ps_intakes WHERE id=$1 RETURNING *";
+            const sql = "DELETE FROM ps_cases WHERE id=$1 RETURNING *";
             const result = await connection.query(sql, [psIntakeId]);
             connection.release();
             const deletedPsIntake = result.rows[0];
