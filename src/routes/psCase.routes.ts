@@ -10,9 +10,9 @@ router.get('/', psCaseController.index)
 
 router.get('/:psCaseId', psCaseController.show)
 
-router.get('/:psCaseId/details', psCaseController.getOne) 
+router.get('/:psCaseId/details', psCaseController.getOne)
 
-router.post('/', verifyAuthToken, psCaseController.create) 
+router.post('/', verifyAuthToken, psCaseController.create)
 
 router.put('/:psCaseId', verifyAuthToken, psCaseController.update) 
 

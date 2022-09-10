@@ -3,8 +3,10 @@ import PsCaseModel, { BasePsCase } from '../models/PsCase'
 
 const psCaseModel = new PsCaseModel();
 
-type PsCase = Omit<BasePsCase, "employee_id"> & {
-    employee?: { id: number; name: string };
+type PsCase = Omit<BasePsCase, "created_by" | "assigned_by" | "assigned_to"> & {
+    created_by_employee?: { id: number; name: string };
+    assigned_employee?: { id: number; name: string };
+    assigned_by_employee?: { id: number; name: string };
     beneficiaries?: { id: number; full_name: string; is_direct: number }[];
 };
 
@@ -15,13 +17,19 @@ async function getOne(psCaseId: number): Promise<PsCase> {
         const result = await connection.query(
             `
             SELECT ps_cases.id, ps_cases.referral_source,
-            employees.name as "employeeName",
-            employees.id as "employeeId",
+            created_by_employee.id as "createdById",
+            created_by_employee.name as "createdByName",
+            assigned_employee.id as "assignedEmployeeId",
+            assigned_employee.name as "assignedEmployeeName",
+            assigned_by_employee.id as "assignedByEmployeeId",
+            assigned_by_employee.name as "assignedByEmployeeName",
             beneficiary_ps_cases.is_direct,
             beneficiaries.full_name as "beneficiaryFullName",
             beneficiaries.id as "beneficiaryId"
             FROM ps_cases
-            LEFT OUTER JOIN employees ON ps_cases.employee_id = employees.id
+            LEFT OUTER JOIN employees as created_by_employee ON ps_cases.created_by = created_by_employee.id
+            LEFT OUTER JOIN employees as assigned_employee ON ps_cases.assigned_by = assigned_employee.id
+            LEFT OUTER JOIN employees as assigned_by_employee ON ps_cases.assigned_to = assigned_by_employee.id
             LEFT OUTER JOIN beneficiary_ps_cases ON ps_cases.id = beneficiary_ps_cases.ps_case_id
             LEFT OUTER JOIN beneficiaries ON beneficiaries.id = beneficiary_ps_cases.beneficiary_id
             WHERE ps_cases.id = $1;
@@ -35,9 +43,17 @@ async function getOne(psCaseId: number): Promise<PsCase> {
         return {
             id: result.rows[0].id,
             referral_source: result.rows[0].referral_source,
-            employee: {
-                id: result.rows[0].employeeId,
-                name: result.rows[0].employeeName,
+            created_by_employee: {
+                id: result.rows[0].createdById,
+                name: result.rows[0].createdByName,
+            },
+            assigned_employee: {
+                id: result.rows[0].assignedEmployeeId,
+                name: result.rows[0].assignedEmployeeName,
+            },
+            assigned_by_employee: {
+                id: result.rows[0].assignedByEmployeeId,
+                name: result.rows[0].assignedByEmployeeName,
             },
             beneficiaries: result.rows.map((row) => ({
                 id: row.beneficiaryId,

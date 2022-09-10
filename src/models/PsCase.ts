@@ -3,65 +3,82 @@ import pool from '../config/db.config'
 export type BasePsCase = {
     id?: number,
     referral_source: string,
-    employee_id: number
+    created_by: number,
+    assigned_to: number,
+    assigned_by: number,
 }
 
-export default class PsIntakeModel {
-    async index(): Promise<BasePsCase[]> {
+export default class PsCaseModel {
+    async index(query: any): Promise<{}> {
         const connection = await pool.connect();
         try {
-            const sql = `SELECT * FROM ps_cases`;
-            const result = await connection.query(sql);
+            const psCasesSql = `
+                SELECT * 
+                FROM ps_cases
+                LIMIT $2
+                OFFSET (($1 - 1) * $2);
+                `;
+            const psCasesResult = await connection.query(psCasesSql, [query.page, query.limit]);
+            
+            const totalRowsSql = `
+            SELECT COUNT(*) 
+            FROM ps_cases
+            `;
+            const totalRowsResult = await connection.query(totalRowsSql);
 
-            return result.rows;
+            const result = {
+                psCases: psCasesResult.rows,
+                totalRows: totalRowsResult.rows[0].count
+            }
+            return result;
         } catch (err) {
-            throw new Error(`Cannot get psIntakes  ${(err as Error).message}`)
+            throw new Error(`Cannot get psCases  ${(err as Error).message}`)
         } finally {
             connection.release();
         }
     }
 
-    async create(psIntake: BasePsCase): Promise<BasePsCase> {
+    async create(psCase: BasePsCase): Promise<BasePsCase> {
         try {
 
             const conn = await pool.connect()
-            const sql = 'INSERT INTO ps_cases (referral_source, employee_id) VALUES($1, $2) RETURNING *'
-            const result = await conn.query(sql, [psIntake.referral_source, psIntake.employee_id])
-            const newPsIntake = result.rows[0]
+            const sql = 'INSERT INTO ps_cases (referral_source, created_by, assigned_to, assigned_by) VALUES($1, $2, $3, $4) RETURNING *'
+            const result = await conn.query(sql, [psCase.referral_source, psCase.created_by, psCase.assigned_to, psCase.assigned_by])
+            const newPsCase = result.rows[0]
 
             conn.release()
 
-            return newPsIntake
+            return newPsCase
         } catch (err) {
             console.log(err)
-            throw new Error(`unable create psIntake (${psIntake.referral_source}): ${(err as Error).message} `)
+            throw new Error(`unable create psCase (${psCase.referral_source}): ${(err as Error).message} `)
         }
     }
 
 
-    async update(psIntakeId: number, psIntake: BasePsCase): Promise<BasePsCase> {
+    async update(psCaseId: number, psCase: BasePsCase): Promise<BasePsCase> {
         try {
             const connection = await pool.connect();
-            const sql = "UPDATE ps_cases SET referral_source = $1, employee_id = $2 WHERE id = $3 RETURNING *";
-            const result = await connection.query(sql, [psIntake.referral_source, psIntake.employee_id, psIntakeId]);
+            const sql = "UPDATE ps_cases SET referral_source = $1, created_by = $2, assigned_to=$3, assigned_by=$4 WHERE id = $5 RETURNING *";
+            const result = await connection.query(sql, [psCase.referral_source, psCase.created_by, psCase.assigned_to, psCase.assigned_by, psCaseId]);
             connection.release();
-            const updatedPsIntake = result.rows[0];
-            return updatedPsIntake;
+            const updatedPsCase = result.rows[0];
+            return updatedPsCase;
         } catch (err) {
-            throw new Error(`Could not update psIntake. Error:  ${(err as Error).message}`)
+            throw new Error(`Could not update psCase. Error:  ${(err as Error).message}`)
         }
     }
 
-    async delete(psIntakeId: number): Promise<BasePsCase> {
+    async delete(psCaseId: number): Promise<BasePsCase> {
         try {
             const connection = await pool.connect();
             const sql = "DELETE FROM ps_cases WHERE id=$1 RETURNING *";
-            const result = await connection.query(sql, [psIntakeId]);
+            const result = await connection.query(sql, [psCaseId]);
             connection.release();
-            const deletedPsIntake = result.rows[0];
-            return deletedPsIntake;
+            const deletedPsCase = result.rows[0];
+            return deletedPsCase;
         } catch (err) {
-            throw new Error(`Could not delete psIntake ${psIntakeId}. Error:  ${(err as Error).message}`)
+            throw new Error(`Could not delete psCase ${psCaseId}. Error:  ${(err as Error).message}`)
         }
     }
 

@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { NextFunction, query, Request, Response } from 'express'
 import PsCaseModel from '../models/PsCase'
 
 import { BasePsCase } from '../models/PsCase'
@@ -7,9 +7,15 @@ import { psCaseService } from '../services/PsCaseService'
 const psCaseModel = new PsCaseModel()
 
 const index = async (_req: Request, res: Response, next: NextFunction) => {
+    const query = {
+        page: parseInt(_req.query.page as string),
+        limit: parseInt(_req.query.limit as string) || 5,
+        search: _req.query.page as string || "",
+        sort: _req.query.sort as string || "rating"
+    }
     try {
-        const psCases = await psCaseModel.index()
-        res.json(psCases)
+        const result = await psCaseModel.index(query)
+        res.json(result)
     } catch (err) {
         next(err)
     }
@@ -27,8 +33,10 @@ const show = async (req: Request, res: Response, next: NextFunction) => {
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
     const psCase: Omit<BasePsCase, 'id'> = {
-        referral_source: req.body.referral_source,
-        employee_id: req.body.employee_id,
+        referral_source:req.body.referralSource,
+        created_by:  parseInt(req.body.createdBy),
+        assigned_by:  req.body.assignedBy,
+        assigned_to:  req.body.assignedTo,
     }
     try {
         const newPsCase = await psCaseModel.create(psCase)
@@ -41,10 +49,13 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 
 const update = async (req: Request, res: Response, next: NextFunction) => {
     const psCase: Omit<BasePsCase, "id"> = {
-        referral_source: req.body.referral_source,
-        employee_id: req.body.employee_id,
+        referral_source:req.body.referralSource,
+        created_by:  Number(req.body.createdBy),
+        assigned_by:  Number(req.body.assignedBy),
+        assigned_to:  Number(req.body.assignedTo),
     }
     try {
+        
         const updatedPsCase = await psCaseModel.update(Number(req.params.psCaseId), psCase)
         res.json(updatedPsCase)
     } catch (err) {
