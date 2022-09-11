@@ -11,7 +11,8 @@ const index = async (_req: Request, res: Response, next: NextFunction) => {
         page: parseInt(_req.query.page as string),
         limit: parseInt(_req.query.limit as string) || 5,
         search: _req.query.page as string || "",
-        sort: _req.query.sort as string || "rating"
+        sort: _req.query.sort as string || "rating",
+        status: _req.query.status as string
     }
     try {
         const result = await psCaseModel.index(query)

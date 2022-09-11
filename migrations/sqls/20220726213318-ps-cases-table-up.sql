@@ -1,3 +1,4 @@
+DROP TYPE CASE_STATUS CASCADE;
 CREATE TYPE CASE_STATUS AS ENUM
     ('active', 'inactive', 'closed');
 
@@ -9,3 +10,12 @@ CREATE TABLE ps_cases (
     assigned_to bigint REFERENCES employees(id),
     status VARCHAR(50) NOT NULL
 );
+
+
+INSERT INTO ps_cases
+    (referral_source, created_by, assigned_by, assigned_to, status)
+VALUES
+    ('SCI', 1, 1, 1, 'inactive'),
+    ('UNHCR', 1, 1, 1, 'inactive'),
+    ('Community', 1, 1, 1, 'inactive'),
+    ('PSW', 1, 1, 1, 'inactive')

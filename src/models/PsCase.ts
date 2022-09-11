@@ -15,16 +15,18 @@ export default class PsCaseModel {
             const psCasesSql = `
                 SELECT * 
                 FROM ps_cases
+                WHERE status = $3
                 LIMIT $2
                 OFFSET (($1 - 1) * $2);
                 `;
-            const psCasesResult = await connection.query(psCasesSql, [query.page, query.limit]);
+            const psCasesResult = await connection.query(psCasesSql, [query.page, query.limit, query.status]);
             
             const totalRowsSql = `
             SELECT COUNT(*) 
             FROM ps_cases
+            WHERE status = $1
             `;
-            const totalRowsResult = await connection.query(totalRowsSql);
+            const totalRowsResult = await connection.query(totalRowsSql, [query.status]);
 
             const result = {
                 psCases: psCasesResult.rows,
