@@ -8,11 +8,14 @@ const beneficiaryModel = new BeneficiaryModel()
 const beneficiaryService = new BeneficiaryService()
 
 const getAll = async (_req: Request, res: Response, next:NextFunction) => {
-    const stringToSearch = _req.query.stringToSearch
-
+    const query = {
+        page: parseInt(_req.query.page as string),
+        limit: parseInt(_req.query.limit as string) || 5,
+        stringToSearch: _req.query.stringToSearch as string || "",
+    }
     try {
-        const beneficiaries = await beneficiaryModel.index(stringToSearch as string)
-        res.json(beneficiaries)
+        const data = await beneficiaryModel.index(query)
+        res.json(data)
     } catch (err) {
         next(err)
     }

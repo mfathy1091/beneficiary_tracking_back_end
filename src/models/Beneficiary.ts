@@ -9,19 +9,36 @@ export type BaseBeneficiary = {
 }
 
 export default class BeneficiaryModel {
-    async index(stringToSearch:string ): Promise<BaseBeneficiary[]> {
+    async index(query: any ): Promise<{}> {
         const connection = await pool.connect();
         try {
             const sql = `
-            SELECT * FROM beneficiaries 
+            SELECT * 
+            FROM beneficiaries 
+            WHERE full_name ILIKE $1 
+            OR file_number ILIKE $1
+            OR individual_number ILIKE $1
+            OR passport_number ILIKE $1
+            LIMIT $3
+            OFFSET (($2 - 1) * $3);
+            `;
+            const result = await connection.query(sql, [`%${query.stringToSearch}%`, query.page, query.limit]);
+
+            const totalRowsSql = `
+            SELECT COUNT(*) 
+            FROM beneficiaries 
             WHERE full_name ILIKE $1 
             OR file_number ILIKE $1
             OR individual_number ILIKE $1
             OR passport_number ILIKE $1
             `;
-            const result = await connection.query(sql, [`%${stringToSearch}%`]);
+            const totalRowsResult = await connection.query(totalRowsSql,  [`%${query.stringToSearch}%`]);
 
-            return result.rows;
+            const data = {
+                beneficiaries: result.rows,
+                totalRows: totalRowsResult.rows[0].count
+            }
+            return data;
         } catch (err) {
             throw new Error(`Cannot get beneficiaries  ${(err as Error).message}`)
         } finally {

@@ -12,14 +12,14 @@ export default class PsCaseModel {
     async index(query: any): Promise<{}> {
         const connection = await pool.connect();
         try {
-            const psCasesSql = `
+            const sql = `
                 SELECT * 
                 FROM ps_cases
                 WHERE status = $3
                 LIMIT $2
                 OFFSET (($1 - 1) * $2);
                 `;
-            const psCasesResult = await connection.query(psCasesSql, [query.page, query.limit, query.status]);
+            const result = await connection.query(sql, [query.page, query.limit, query.status]);
             
             const totalRowsSql = `
             SELECT COUNT(*) 
@@ -28,11 +28,11 @@ export default class PsCaseModel {
             `;
             const totalRowsResult = await connection.query(totalRowsSql, [query.status]);
 
-            const result = {
-                psCases: psCasesResult.rows,
+            const data = {
+                psCases: result.rows,
                 totalRows: totalRowsResult.rows[0].count
             }
-            return result;
+            return data;
         } catch (err) {
             throw new Error(`Cannot get psCases  ${(err as Error).message}`)
         } finally {

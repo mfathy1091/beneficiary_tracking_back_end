@@ -18,4 +18,16 @@ VALUES
     ('SCI', 1, 1, 1, 'inactive'),
     ('UNHCR', 1, 1, 1, 'inactive'),
     ('Community', 1, 1, 1, 'inactive'),
-    ('PSW', 1, 1, 1, 'inactive')
+    ('PSW', 1, 1, 1, 'inactive'),
+    ('SCI', 1, 1, 1, 'inactive'),
+    ('UNHCR', 1, 1, 1, 'inactive'),
+    ('Community', 1, 1, 1, 'inactive'),
+    ('SCI', 1, 1, 1, 'inactive'),
+    ('UNHCR', 1, 1, 1, 'inactive'),
+    ('Community', 1, 1, 1, 'inactive'),
+    ('SCI', 1, 1, 1, 'inactive'),
+    ('UNHCR', 1, 1, 1, 'inactive'),
+    ('Community', 1, 1, 1, 'inactive'),
+    ('SCI', 1, 1, 1, 'inactive'),
+    ('UNHCR', 1, 1, 1, 'inactive'),
+    ('Community', 1, 1, 1, 'inactive')

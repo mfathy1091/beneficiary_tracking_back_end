@@ -15,8 +15,8 @@ const index = async (_req: Request, res: Response, next: NextFunction) => {
         status: _req.query.status as string
     }
     try {
-        const result = await psCaseModel.index(query)
-        res.json(result)
+        const data = await psCaseModel.index(query)
+        res.json(data)
     } catch (err) {
         next(err)
     }
