@@ -29,7 +29,7 @@ interface Error {
 
 
 
-
+app.use('/uploads', express.static('uploads'))
 app.use(ErrorHandler);
 
 app.use((_req: Request, res: Response) => {

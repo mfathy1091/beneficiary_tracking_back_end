@@ -52,6 +52,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
             const { password, ...userWithoutPassword } = user;
             // (3) Create token
             const token = authService.generateToken(user);
+
             res.json({ 
                 'user': userWithoutPassword,
                 'token': token

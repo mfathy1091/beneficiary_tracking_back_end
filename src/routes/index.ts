@@ -7,6 +7,8 @@ import employeeRouter from './employee.routes';
 import beneficiaryRouter from './beneficiary.routes';
 import psCaseRouter from './psCase.routes'
 import psServiceRouter from './psService.routes'
+import uploadRouter from './upload.routes'
+
 import * as authController from '../controllers/auth.controllers'
 import { registerSchema } from '../schema/register.schema';
 import { loginSchema } from '../schema/login.schema';
@@ -29,4 +31,5 @@ router.use('/beneficiaries', beneficiaryRouter)
 router.use('/ps-cases', psCaseRouter)
 router.use('/ps-services', psServiceRouter)
 
+router.use('/upload', uploadRouter)
 export default router;
