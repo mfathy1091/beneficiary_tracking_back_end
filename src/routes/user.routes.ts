@@ -1,5 +1,5 @@
 import express from 'express';
-import verifyAuthToken from '../middlewares/checkAuth.middleware'
+import verifyAuthToken from '../middlewares/Auth.middleware'
 
 import * as controller from '../controllers/user.controllers'
 

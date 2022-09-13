@@ -1,5 +1,5 @@
 import express from 'express';
-import verifyAuthToken from '../middlewares/checkAuth.middleware'
+import verifyAuthToken from '../middlewares/Auth.middleware'
 import * as roleController from '../controllers/role.controllers'
 
 const router = express.Router();

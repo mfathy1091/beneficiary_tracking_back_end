@@ -1,5 +1,5 @@
 import express from 'express';
-import verifyAuthToken from '../middlewares/checkAuth.middleware'
+import auth from '../middlewares/Auth.middleware'
 
 import * as controller from '../controllers/employee.controllers'
 
@@ -9,11 +9,11 @@ router.get('/', controller.index)
 
 router.get('/:employeeId', controller.show)
 
-router.post('/', verifyAuthToken, controller.create) 
+router.post('/', auth, controller.create) 
 
-router.put('/:employeeId', verifyAuthToken, controller.update) 
+router.put('/:employeeId', auth, controller.update) 
 
-router.delete('/:employeeId', verifyAuthToken, controller.destroy)
+router.delete('/:employeeId', auth, controller.destroy)
 
 
 

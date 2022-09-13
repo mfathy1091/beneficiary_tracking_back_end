@@ -5,6 +5,7 @@ import EmployeeModel from '../models/Employee';
 import UserService from './userService'
 import bcrypt from 'bcrypt'
 import pool from '../config/db.config';
+import tokenService from '../helpers/createToken';
 
 const saltRounds = process.env.SALT_ROUND
 const pepper = process.env.BCRYPT_PASSWORD
@@ -51,7 +52,32 @@ export default class AuthService {
         }
     }
     
-
+    async getAuthUser(id: number): Promise<BaseUser | null> {
+        try {
+            // (1) Check if user exists
+            const conn = await pool.connect()
+            const sql = `
+                SELECT 
+                    users.username, users.password,
+                    roles.role_name,
+                    employees.name, employees.email, employees.avatar_url
+                FROM users 
+                Join roles ON users.role_id = roles.id
+                Join employees ON users.id = employees.user_id
+                WHERE id=($1)
+                `
+        
+            const result = await conn.query(sql, [id])
+            if(result.rows.length){
+                return result.rows[0]
+            }else{
+                return null
+            }
+            
+        } catch (err) {
+            throw new Error(`Cannot find user: ${(err as Error).message}`);
+        }
+    }
 
     async authenticate(username: string, password: string): Promise<BaseUser | null> {
         try {
@@ -61,7 +87,7 @@ export default class AuthService {
                 SELECT 
                     users.username, users.password,
                     roles.role_name,
-                    employees.name, employees.email
+                    employees.name, employees.email, employees.avatar_url
                 FROM users 
                 Join roles ON users.role_id = roles.id
                 Join employees ON users.id = employees.user_id
@@ -88,13 +114,9 @@ export default class AuthService {
         return token;
     }
 
-    verifyToken(token: string){
-        try {
-            const decoded = jwt.verify(token, process.env.TOKEN_SECRET as unknown as string)
-        } catch (error) {
-            return error
-        }    
-    }
+
+
+
 
 
     async hashPassword(password: string) {

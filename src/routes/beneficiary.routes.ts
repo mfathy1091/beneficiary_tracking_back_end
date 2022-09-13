@@ -1,5 +1,5 @@
 import express from 'express';
-import verifyAuthToken from '../middlewares/checkAuth.middleware'
+import verifyAuthToken from '../middlewares/Auth.middleware'
 import { beneficiarySchema } from '../schema/beneficiary.schema';
 import { validateRequestSchema } from '../middlewares/validate-request-schema';
 import * as beneficiaryController from '../controllers/beneficiary.controllers'

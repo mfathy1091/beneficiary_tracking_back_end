@@ -2,7 +2,7 @@ import express from 'express';
 import upload from '../middlewares/upload.middleware'
 import uploadImage from '../middlewares/uploadImage'
 import * as uploadController from '../controllers/upload.controllers'
-import verifyAuthToken from '../middlewares/checkAuth.middleware'
+import verifyAuthToken from '../middlewares/Auth.middleware'
 
 const router = express.Router();
 
