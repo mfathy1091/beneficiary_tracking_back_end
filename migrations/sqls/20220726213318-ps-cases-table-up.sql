@@ -1,4 +1,5 @@
 DROP TYPE CASE_STATUS CASCADE;
+
 CREATE TYPE CASE_STATUS AS ENUM
     ('active', 'inactive', 'closed');
 
