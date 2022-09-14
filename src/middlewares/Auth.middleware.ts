@@ -2,7 +2,7 @@ import {Request, Response, NextFunction} from 'express'
 import jwt from 'jsonwebtoken'
 
 interface AuthRequest extends Request {
-    user: any;
+    authPayload: any;
 }
 
 const auth = (req: Request, res: Response, next:NextFunction) => {
@@ -15,11 +15,11 @@ const auth = (req: Request, res: Response, next:NextFunction) => {
 
         // validate
         const token = authorizationHeader.split(' ')[1]
-        jwt.verify(token, process.env.ACCESS_TOKEN as unknown as string, (err, user) => {
+        jwt.verify(token, process.env.ACCESS_TOKEN as unknown as string, (err, payload) => {
             //if (err) return res.status(401).json({ msg: "Authentication faild!" })
 
             // success
-            (req as AuthRequest).user = user;
+            (req as AuthRequest).authPayload = payload;
             next();
         })
     } catch (err) {

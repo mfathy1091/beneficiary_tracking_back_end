@@ -17,6 +17,7 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
     role_id: Number(req.body.role_id),
   }
 
+
   try {
     // (2) register new user
     const newUser = await authService.register(user)
@@ -47,13 +48,21 @@ const signIn = async (req: Request, res: Response, next: NextFunction) => {
   const { username, password } = req.body;
   try {
     // (2) Check if authenticated
-    const user = await authService.authenticate(username, password)
+    const user = await authService.signIn(username, password)
     if (user === null) {
       res.status(404).json({ error: 'Wrong credentials' })
     } else {
-      const { password, ...userWithoutPassword } = user;
+      const payload = {
+        userId:user.id,
+        username: user.username,
+        name: user.name,
+        email: user.email,
+        avatarUrl: user.avatar_url,
+        roleName: user.role_name,
+        permissions: []
+      }
       // (3) Create refresh token and store it in a cookie
-      const rf_token = createToken.refresh({ id: user.id });
+      const rf_token = createToken.refresh(payload);
       res.cookie("_apprftoken", rf_token, {
         httpOnly: true, // to not allow anyone to use javascrept to mess with the token
         path: "/api/auth/access",
@@ -61,7 +70,7 @@ const signIn = async (req: Request, res: Response, next: NextFunction) => {
       })
 
       //success
-      res.status(200).json({ msg: "Sign In success" });
+      res.status(200).json({ msg: "Sign In success", rf_token });
     }
   } catch (err) {
     next(err)
@@ -75,10 +84,12 @@ const access = async (req: Request, res: Response, next: NextFunction) => {
     if (!rf_token) return res.status(400).json({ msg: "Please sign in" })
 
     // validate refresh token
-    jwt.verify(rf_token, process.env.REFRESH_TOKEN as string, (err: any, user: any) => {
+    jwt.verify(rf_token, process.env.REFRESH_TOKEN as string, (err: any, payload: any) => {
       if (err) return res.status(400).json({ msg: "Please sign in again" });
       // create access token
-      const ac_token = createToken.access({ id: user.id })
+      const {ait, exp, ...ac_token_payload} = payload
+
+      const ac_token = createToken.access(ac_token_payload)
 
       // access success
       return res.status(200).json({ ac_token })
@@ -89,15 +100,16 @@ const access = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 interface AuthRequest extends Request {
-  user: any;
+  authPayload: any;
 }
 
 const authUser = async (req: Request, res: Response, next: NextFunction) => {
-  console.log((req as AuthRequest).user.id)
+  console.log((req as AuthRequest).authPayload)
   try {
-    // get info -password
-    const user = await authService.getAuthUser((req as AuthRequest).user.id) // user id is comming from the auth middleware
-    console.log((req as AuthRequest).user.id)
+    // get info without password
+    const user = await authService.getAuthUser((req as AuthRequest).authPayload.userId) // user id is comming from the auth middleware
+
+    console.log((req as AuthRequest).authPayload.userId)
     res.status(200).json({user})
   } catch (err) {
     next(err)  
