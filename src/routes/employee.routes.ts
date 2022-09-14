@@ -1,19 +1,19 @@
 import express from 'express';
-import auth from '../middlewares/Auth.middleware'
+import verifyJWT from '../middlewares/verifyJWT.middleware'
 
 import * as controller from '../controllers/employee.controllers'
 
 const router = express.Router();
 
-router.get('/', controller.index)
+router.get('/', verifyJWT, controller.index)
 
-router.get('/:employeeId', controller.show)
+router.get('/:employeeId', verifyJWT, controller.show)
 
-router.post('/', auth, controller.create) 
+router.post('/', verifyJWT, controller.create) 
 
-router.put('/:employeeId', auth, controller.update) 
+router.put('/:employeeId', verifyJWT, controller.update) 
 
-router.delete('/:employeeId', auth, controller.destroy)
+router.delete('/:employeeId', verifyJWT, controller.destroy)
 
 
 

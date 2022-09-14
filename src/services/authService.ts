@@ -79,7 +79,7 @@ export default class AuthService {
     }
   }
 
-  async signIn(username: string, password: string): Promise<any> {
+  async getUser(username: string): Promise<any> {
     try {
 
       const conn = await pool.connect()
@@ -95,19 +95,10 @@ export default class AuthService {
                 `
       const result = await conn.query(sql, [username])
 
-      // (1) Check if user exists
       if (result.rows.length) {
-        const user = result.rows[0]
-        // (2) Check if password is valid
-        const isValid = await this.isPasswordValid(password, user.password);
-        if (isValid) {
-          // (3) return user
-          return user
-        }else {
-          throw new Error(`Wrong password`);
-        }
-      } else {
-        throw new Error(`User doesn't exist`);
+        return result.rows[0];
+      }else{
+        return null;
       }
     } catch (err) {
       throw new Error(`${(err as Error).message}`);

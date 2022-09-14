@@ -1,5 +1,5 @@
 import express from 'express';
-import verifyAuthToken from '../middlewares/Auth.middleware'
+import verifyAuthToken from '../middlewares/verifyJWT.middleware'
 
 import * as psCaseController from '../controllers/psCase.controllers'
 import * as beneficiaryController from '../controllers/beneficiary.controllers'

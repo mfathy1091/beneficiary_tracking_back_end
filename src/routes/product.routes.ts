@@ -1,5 +1,5 @@
 import express from 'express';
-import verifyAuthToken from '../middlewares/Auth.middleware'
+import verifyAuthToken from '../middlewares/verifyJWT.middleware'
 
 import * as controller from '../controllers/product.controllers'
 
