@@ -3,7 +3,8 @@ export type BaseUser = {
     id?: number,
     username: string,
     password: string,
-    role_id: number
+    role_id: number,
+    refresh_token?: string
 }
 
 export default class UserModel {
@@ -55,8 +56,8 @@ export default class UserModel {
     async update(userId: string, user: BaseUser): Promise<BaseUser> {
         try {
             const connection = await pool.connect();
-            const sql = "UPDATE users SET username = $1, password = $2, role_id=$3 WHERE id=$4 RETURNING *";
-            const result = await connection.query(sql, [user.username, user.password, user.role_id, userId]);
+            const sql = "UPDATE users SET username = $1, password = $2, role_id=$3, refresh_token=$4 WHERE id=$5 RETURNING *";
+            const result = await connection.query(sql, [user.username, user.password, user.role_id, user.refresh_token, userId]);
             connection.release();
             const updatedUser = result.rows[0];
             return updatedUser;

@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import * as jwt from 'jsonwebtoken'
 
 interface AuthRequest extends Request {
-  user: any;
+  username: any;
 }
 
 declare module "jsonwebtoken" {
@@ -28,7 +28,7 @@ const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
         if (err) return res.sendStatus(403); //invalid token
 
         // (2) if verified, attached username to the next middleware / controller
-        (req as AuthRequest).user = (decoded as jwt.JwtPayload).username;
+        (req as AuthRequest).username = (decoded as jwt.JwtPayload).username;
         next();
       })
   } catch (err) {

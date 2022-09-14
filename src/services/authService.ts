@@ -36,32 +36,6 @@ export default class AuthService {
     }
   }
 
-  async signIn2(id: number): Promise<BaseUser | null> {
-    try {
-      // (1) Check if user exists
-      const conn = await pool.connect()
-      const sql = `
-                SELECT 
-                    users.username, users.password,
-                    roles.role_name,
-                    employees.name, employees.email, employees.avatar_url
-                FROM users 
-                Join roles ON users.role_id = roles.id
-                Join employees ON users.id = employees.user_id
-                WHERE id=($1)
-                `
-
-      const result = await conn.query(sql, [id])
-      if (result.rows.length) {
-        return result.rows[0]
-      } else {
-        return null
-      }
-
-    } catch (err) {
-      throw new Error(`Cannot find user: ${(err as Error).message}`);
-    }
-  }
 
   async resetPassword(userId: string, user: BaseUser): Promise<BaseUser> {
     try {
@@ -79,21 +53,42 @@ export default class AuthService {
     }
   }
 
-  async getUser(username: string): Promise<any> {
+  async getUserByUsername(username: string): Promise<any> {
     try {
 
       const conn = await pool.connect()
       const sql = `
-                SELECT 
-                    users.id, users.username, users.password,
-                    roles.role_name,
-                    employees.name, employees.email, employees.avatar_url
-                FROM users 
-                Join roles ON users.role_id = roles.id
-                Join employees ON users.id = employees.user_id
-                WHERE username=($1)
-                `
+          SELECT 
+              users.id, users.username, users.password,
+              employees.name, employees.email, employees.avatar_url,
+              roles.role_name
+          FROM users
+          LEFT JOIN employees ON users.id = employees.user_id
+          LEFT JOIN roles ON users.role_id = roles.id
+          WHERE users.username=($1)
+          `
       const result = await conn.query(sql, [username])
+      if (result.rows.length) {
+        return result.rows[0];
+      }else{
+        return null;
+      }
+    } catch (err) {
+      throw new Error(`${(err as Error).message}`);
+    }
+  }
+
+  async getUserByRefreshToken(refreshToken: string): Promise<any> {
+    try {
+
+      const conn = await pool.connect()
+      const sql = `
+          SELECT 
+            *
+          FROM users 
+          WHERE refresh_token=($1)
+          `
+      const result = await conn.query(sql, [refreshToken])
 
       if (result.rows.length) {
         return result.rows[0];
@@ -105,28 +100,6 @@ export default class AuthService {
     }
   }
 
-  async getAuthUser(userId: number): Promise<any> {
-    try {
-      // (1) get user WITHOUT PASSWORD
-      const conn = await pool.connect()
-      const sql = `
-          SELECT 
-              users.id, users.username,
-              roles.role_name,
-              employees.name, employees.email, employees.avatar_url
-          FROM users 
-          Join roles ON users.role_id = roles.id
-          Join employees ON users.id = employees.user_id
-          WHERE users.id=($1)
-          `
-
-      const result = await conn.query(sql, [userId])
-      return result.rows[0]
-
-    } catch (err) {
-      throw new Error(`Cannot get user: ${(err as Error).message}`);
-    }
-  }
 
   generateToken(user: BaseUser): string {
     const token = jwt.sign({ user }, process.env.TOKEN_SECRET as unknown as string);

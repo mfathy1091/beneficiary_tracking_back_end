@@ -1,15 +1,16 @@
 const jwt = require("jsonwebtoken");
 
 const createToken = {
-  activation: (payload: any) => {
-    return jwt.sign(payload, process.env.ACTIVATION_TOKEN, { expiresIn: "5m" });
+  activationToken: (payload: any) => {
+    return jwt.sign(payload, process.env.ACTIVATION_TOKEN_SECRET, { expiresIn: "5m" });
   },
-  refresh: (payload: any) => {
+  refreshToken: (payload: any) => {
     console.log(payload)
-    return jwt.sign(payload, process.env.REFRESH_TOKEN, { expiresIn: "1h" });
+    return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "1d" });
   },
-  access: (payload: any) => {
-    return jwt.sign(payload, process.env.ACCESS_TOKEN, { expiresIn: "5m" });
+
+  accessToken: (payload: any) => {
+    return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "5m" });
   },
 };
 
