@@ -4,12 +4,21 @@ import router from './routes/index';
 import ErrorHandler from './middlewares/ErrorHandler'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
-
+import credentials from './middlewares/credentials';
+import corsOptions
+ from './config/corsOptions';
 const app: express.Application = express()
 const address: string = "127.0.0.1:"+ process.env.NODE_PORT
 
 // (2) Middlewares
-app.use(cors())
+
+// Handle options credentials check for allowed origins - before CORS!
+// and fetch cookies credentials requirements
+app.use(credentials)
+
+// Add allowed origins
+app.use(cors(corsOptions))
+
 app.use(express.urlencoded());
 app.use(express.json())
 app.use(cookieParser())

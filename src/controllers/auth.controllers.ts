@@ -9,41 +9,45 @@ import jwt from 'jsonwebtoken'
 
 const userModel = new UserModel()
 
-const login = async (req: Request, res: Response, next: NextFunction) => {
+const login = async (req: Request, res: Response) => {
   // (1) Validate request parameters, queries using express-validator
   const { username, password } = req.body;
+  if (!username || !password) return res.status(400).json({ 'message': 'Username and password are required.' });
+  
   try {
     // (2) Check if user exists
     const foundUser  = await authService.getUserByUsername(username);
     
     if (!foundUser){
       console.log("User not found");
-      return res.sendStatus(401).json({msg: "User not found"}); //Unauthorized 
+      return res.status(400).json({'message': "User not found"}); //Unauthorized 
     } 
 
     // (3) evaluate password
     const paswordMatch = await authService.isPasswordValid(password, foundUser.password);
     
-    if(paswordMatch) {
-      // (4) create JWTs
-      const payload = { "username": foundUser.username }
-      const accessToken = createToken.accessToken(payload);
-      const refreshToken = createToken.refreshToken(payload);
-      
-      // (5) save refreshToken in DB with the current user
-      const currentUser = { ...foundUser, refresh_token: refreshToken };
-      await userModel.update(foundUser.id, currentUser);
-      
-      // (6) store referesh token in a http-only cookie
-      // that way the cookie that contains the refresh token will be in every request
-      res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 *60 *60 * 1000 });
-      
-      // (7) send the access token
-      res.json({accessToken})
-    }
+    if (!paswordMatch){
+      console.log("Wrong password");
+      return res.status(400).json({'message': "Wrong password"}); //Unauthorized 
+    } 
+    // (4) create JWTs
+    const payload = { "username": foundUser.username }
+    const accessToken = createToken.accessToken(payload);
+    const refreshToken = createToken.refreshToken(payload);
+    
+    // (5) save refreshToken in DB with the current user
+    const currentUser = { ...foundUser, refresh_token: refreshToken };
+    await userModel.update(foundUser.id, currentUser);
+    
+    // (6) store referesh token in a http-only cookie
+    // that way the cookie that contains the refresh token will be in every request
+    res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'none', secure: true, maxAge: 24 *60 *60 * 1000 });
+    
+    // (7) send the access token
+    res.json({accessToken})
+
   } catch (err) {
     console.log(err)
-    next(err)
   }
 }
 
@@ -63,7 +67,8 @@ const logout = async (req: Request, res: Response, next: NextFunction) => {
     const foundUser  = await authService.getUserByRefreshToken(refreshToken);
 		// (3) if no user and yes cookie, then, delete the cookie
 		if (!foundUser){
-			res.clearCookie('jwt', {httpOnly: true,  maxAge: 24 *60 *60 * 1000});
+      // no need to specify the maxAge option
+			res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true });
 			return res.sendStatus(204)
 		} 
 		
@@ -73,7 +78,7 @@ const logout = async (req: Request, res: Response, next: NextFunction) => {
 
     // (5) Delete the cookie
     /* secure: true - add this option in porduction to only serve on https */
-		res.clearCookie('jwt', { httpOnly: true, maxAge: 24 *60 *60 * 1000 });
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true });
     console.log('after deletion')
     console.log(cookies?.jwt)
 		return res.sendStatus(204)
