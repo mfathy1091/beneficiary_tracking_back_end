@@ -29,7 +29,8 @@ const update = async (req: Request, res: Response, next:NextFunction) => {
     const user: Omit<BaseUser, "id"> = {
         username: req.body.username,
         password: req.body.password,
-        role_id: req.body.role_id,
+        role_id: req.body.roleId,
+        avatar_url: req.body.avatarUrl
     }
     try {
         const newUser = await userModel.update(req.params.userId, user)

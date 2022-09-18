@@ -4,7 +4,8 @@ export type BaseUser = {
     username: string,
     password: string,
     role_id: number,
-    refresh_token?: string
+    refresh_token?: string,
+    avatar_url?: string
 }
 
 export default class UserModel {

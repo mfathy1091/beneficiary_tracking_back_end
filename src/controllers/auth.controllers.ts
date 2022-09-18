@@ -41,10 +41,21 @@ const login = async (req: Request, res: Response) => {
     
     // (6) store referesh token in a http-only cookie
     // that way the cookie that contains the refresh token will be in every request
+    /* IMPORTANT: ADD secure: true */
     res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'none', secure: true, maxAge: 24 *60 *60 * 1000 });
     
-    // (7) send the access token
-    res.json({accessToken})
+    // (7) omit user's sensitive data before sending it
+    const userData = {
+      id: foundUser.id,
+      username: foundUser.username,
+      name: foundUser.name,
+      email: foundUser.email,
+      avatarUrl: foundUser.avatar_url,
+      role: foundUser.role_name,
+    }
+
+    // (8) send the access token and  user
+    res.json({ accessToken: accessToken, user: userData })
 
   } catch (err) {
     console.log(err)

@@ -1,22 +1,22 @@
 import express from 'express';
-import verifyAuthToken from '../middlewares/verifyJWT.middleware'
+import verifyJWT from '../middlewares/verifyJWT.middleware'
 import { beneficiarySchema } from '../schema/beneficiary.schema';
 import { validateRequestSchema } from '../middlewares/validate-request-schema';
 import * as beneficiaryController from '../controllers/beneficiary.controllers'
 
 const router = express.Router();
 
-router.get('/', beneficiaryController.getAll)
+router.get('/', verifyJWT, beneficiaryController.getAll)
 
-router.get('/:beneficiaryId', beneficiaryController.getOne)
+router.get('/:beneficiaryId', verifyJWT, beneficiaryController.getOne)
 
-router.post('/', verifyAuthToken, beneficiarySchema, validateRequestSchema, beneficiaryController.createOne) 
+router.post('/', verifyJWT, beneficiarySchema, validateRequestSchema, beneficiaryController.createOne) 
 
-router.put('/:beneficiaryId', verifyAuthToken, beneficiaryController.updateOne) 
+router.put('/:beneficiaryId', verifyJWT, beneficiaryController.updateOne) 
 
-router.delete('/:beneficiaryId', verifyAuthToken, beneficiaryController.deleteOne)
+router.delete('/:beneficiaryId', verifyJWT, beneficiaryController.deleteOne)
 
-//router.post('/:beneficiaryId/ps-services', verifyAuthToken, beneficiaryController.addPsService)
+//router.post('/:beneficiaryId/ps-services', verifyJWT, beneficiaryController.addPsService)
 
 
 

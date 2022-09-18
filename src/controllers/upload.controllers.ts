@@ -19,7 +19,7 @@ const uploadAvatar = async (req: Request, res: Response, next: NextFunction) => 
       .upload(
         file?.path as string,
         
-        { folder: "avatar", width: 150, height: 150, crop: 'fill' },
+        { folder: "avatar", width: 200, height: 200, crop: 'fill' },
         (err, result) => {
           if (err) {
             // throw err;

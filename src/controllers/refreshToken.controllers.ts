@@ -37,8 +37,18 @@ const refreshToken = async (req: Request, res: Response, next: NextFunction) => 
 				const payload = { "username": foundUser.username }
 				const accessToken = createToken.accessToken(payload);
 				
-				// (5) send back access token
-				res.json({ accessToken })
+        // (5) omit user's sensitive data before sending it
+        const userData = {
+          id: foundUser.id,
+          username: foundUser.username,
+          name: foundUser.name,
+          email: foundUser.email,
+          avatarUrl: foundUser.avatar_url,
+          role: foundUser.role_name,
+        }
+
+				// (6) send back access token and user
+				res.json({ accessToken: accessToken, user: userData })
 				})
   } catch (err) {
     return res.status(401).send("Authentication faild!")

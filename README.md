@@ -1,3 +1,10 @@
+## Authentication System
+Using access and refresh tokens
+
+* saving access token in front-end's state (on memory)
+* when refreshing the front-end, reenittiate the access token.
+
+
 # Storefront Backend Project
 
 ## A) Setup preparation

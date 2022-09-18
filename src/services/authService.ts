@@ -58,15 +58,15 @@ export default class AuthService {
 
       const conn = await pool.connect()
       const sql = `
-          SELECT 
-              users.id, users.username, users.password,
-              employees.name, employees.email, employees.avatar_url,
-              roles.role_name
-          FROM users
-          LEFT JOIN employees ON users.id = employees.user_id
-          LEFT JOIN roles ON users.role_id = roles.id
-          WHERE users.username=($1)
-          `
+        SELECT 
+            users.id, users.username, users.password,
+            employees.name, employees.email, employees.avatar_url,
+            roles.role_name
+        FROM users
+        LEFT JOIN employees ON users.id = employees.user_id
+        LEFT JOIN roles ON users.role_id = roles.id
+        WHERE users.username=($1)
+        `
       const result = await conn.query(sql, [username])
       if (result.rows.length) {
         return result.rows[0];
@@ -83,11 +83,15 @@ export default class AuthService {
 
       const conn = await pool.connect()
       const sql = `
-          SELECT 
-            *
-          FROM users 
-          WHERE refresh_token=($1)
-          `
+        SELECT 
+          users.id, users.username, users.password,
+          employees.name, employees.email, employees.avatar_url,
+          roles.role_name
+        FROM users
+        LEFT JOIN employees ON users.id = employees.user_id
+        LEFT JOIN roles ON users.role_id = roles.id
+        WHERE refresh_token=($1)
+        `
       const result = await conn.query(sql, [refreshToken])
 
       if (result.rows.length) {
