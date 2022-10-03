@@ -8,7 +8,3 @@ CREATE TABLE employees (
 
 
 
-INSERT INTO employees
-    (name, email, avatar_url, user_id)
-VALUES
-    ('mohamed fathy', 'admin@gmail.com', 'https://res.cloudinary.com/dztskndab/image/upload/v1662985098/avatar/avatar_czgymz.png', '1')

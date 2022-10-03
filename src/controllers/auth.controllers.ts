@@ -23,28 +23,35 @@ const login = async (req: Request, res: Response) => {
       return res.status(400).json({'message': "User not found"}); //Unauthorized 
     } 
 
-    // (3) evaluate password
+    // (3) Verify password
     const paswordMatch = await authService.isPasswordValid(password, foundUser.password);
     
     if (!paswordMatch){
       console.log("Wrong password");
       return res.status(400).json({'message': "Wrong password"}); //Unauthorized 
     } 
-    // (4) create JWTs
+
+    // (4) Check if active
+    if(foundUser.is_active === false){
+      console.log('Inactive account');
+      return res.status(400).json({'message': 'Inactive account'})
+    }
+
+    // (5) create JWTs
     const payload = { "username": foundUser.username }
     const accessToken = createToken.accessToken(payload);
     const refreshToken = createToken.refreshToken(payload);
     
-    // (5) save refreshToken in DB with the current user
+    // (6) save refreshToken in DB with the current user
     const currentUser = { ...foundUser, refresh_token: refreshToken };
     await userModel.update(foundUser.id, currentUser);
     
-    // (6) store referesh token in a http-only cookie
+    // (7) store referesh token in a http-only cookie
     // that way the cookie that contains the refresh token will be in every request
     /* IMPORTANT: ADD secure: true */
     res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'none', secure: true, maxAge: 24 *60 *60 * 1000 });
     
-    // (7) omit user's sensitive data before sending it
+    // (8) omit user's sensitive data before sending it
     const userData = {
       id: foundUser.id,
       username: foundUser.username,
@@ -52,6 +59,7 @@ const login = async (req: Request, res: Response) => {
       email: foundUser.email,
       avatarUrl: foundUser.avatar_url,
       role: foundUser.role_name,
+      isActive: foundUser.is_active
     }
 
     // (8) send the access token and  user

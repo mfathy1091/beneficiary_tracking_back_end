@@ -3,6 +3,7 @@ import AuthService from '../services/authService'
 const authService = new AuthService()
 import UserModel from '../models/User'
 import { BaseUser } from '../models/User'
+import { isImportEqualsDeclaration } from 'typescript'
 
 
 const userModel = new UserModel()
@@ -16,9 +17,12 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
 
 
   const user: BaseUser = {
+    name: req.body.name,
+    email: req.body.email,
     username: req.body.username,
     password: req.body.password,
-    role_id: Number(req.body.role_id),
+    role_id: Number(req.body.roleId),
+    is_active: Number(req.body.isActive)
   }
 
 

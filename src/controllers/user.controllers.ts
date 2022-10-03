@@ -28,9 +28,11 @@ const show = async (req: Request, res: Response, next: NextFunction) => {
 const update = async (req: Request, res: Response, next:NextFunction) => {
     const user: Omit<BaseUser, "id"> = {
         username: req.body.username,
+        email: req.body.email,
         password: req.body.password,
         role_id: req.body.roleId,
-        avatar_url: req.body.avatarUrl
+        avatar_url: req.body.avatarUrl,
+        is_active: req.body.isActive
     }
     try {
         const newUser = await userModel.update(req.params.userId, user)

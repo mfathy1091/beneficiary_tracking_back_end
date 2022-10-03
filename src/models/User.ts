@@ -2,10 +2,13 @@ import pool from '../config/db.config';
 export type BaseUser = {
     id?: number,
     username: string,
+    email: string,
     password: string,
+    name?: string,
     role_id: number,
     refresh_token?: string,
-    avatar_url?: string
+    avatar_url?: string,
+    is_active: number
 }
 
 export default class UserModel {
@@ -13,7 +16,7 @@ export default class UserModel {
     async index(): Promise<BaseUser[]> {
         const connection = await pool.connect();
         try {
-            const sql = `SELECT id, username FROM users`;
+            const sql = `SELECT username, email, name FROM users`;
             const result = await connection.query(sql);
 
             return result.rows;
@@ -40,8 +43,8 @@ export default class UserModel {
         try {
             
             const conn = await pool.connect()
-            const sql = 'INSERT INTO users (username, password, role_id) VALUES($1, $2, $3) RETURNING id, username, role_id'
-            const result = await conn.query(sql, [user.username, user.password, user.role_id])
+            const sql = 'INSERT INTO users (name, username, email, password, role_id, is_active) VALUES($1, $2, $3, $4, $5, $6) RETURNING id, name, username, email, role_id, is_active'
+            const result = await conn.query(sql, [user.name, user.username, user.email, user.password, user.role_id, user.is_active])
             const newUser = result.rows[0]
 
             conn.release()

@@ -60,10 +60,9 @@ export default class AuthService {
       const sql = `
         SELECT 
             users.id, users.username, users.password,
-            employees.name, employees.email, employees.avatar_url,
+            users.name, users.email, users.avatar_url, users.is_active,
             roles.role_name
         FROM users
-        LEFT JOIN employees ON users.id = employees.user_id
         LEFT JOIN roles ON users.role_id = roles.id
         WHERE users.username=($1)
         `
@@ -85,10 +84,9 @@ export default class AuthService {
       const sql = `
         SELECT 
           users.id, users.username, users.password,
-          employees.name, employees.email, employees.avatar_url,
+          users.name, users.email, users.avatar_url,
           roles.role_name
         FROM users
-        LEFT JOIN employees ON users.id = employees.user_id
         LEFT JOIN roles ON users.role_id = roles.id
         WHERE refresh_token=($1)
         `
