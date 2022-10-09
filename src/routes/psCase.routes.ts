@@ -12,11 +12,11 @@ router.get('/:psCaseId', psCaseController.show)
 
 router.get('/:psCaseId/details', psCaseController.getOne)
 
-router.post('/', verifyAuthToken, psCaseController.create)
+router.post('/', psCaseController.create)
 
-router.put('/:psCaseId', verifyAuthToken, psCaseController.update) 
+router.put('/:psCaseId', psCaseController.update) 
 
-router.delete('/:psCaseId', verifyAuthToken, psCaseController.destroy)
+router.delete('/:psCaseId', psCaseController.destroy)
 
 
 router.post('/:psCaseId/beneficiaries', psCaseController.addBeneficiary)

@@ -16,7 +16,7 @@ const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
     // check ac token
     const authHeader = req.headers['authorization'];
     if (!authHeader) {
-      return res.status(401).json({ msg: "Authentication faild!, access token is missing" })
+      return res.status(403).json({ msg: "Authentication faild!, access token is missing" })
     }
 
     // (1) Verify the token
@@ -25,7 +25,9 @@ const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
       token,
       process.env.ACCESS_TOKEN_SECRET as unknown as string,
       (err, decoded) => {
-        if (err) return res.sendStatus(403); //invalid token
+        if (err){ //invalid token
+          return res.sendStatus(403).json({ msg: 'Authentication faild!, Access token is invalid' });
+        }  
 
         // (2) if verified, attached username to the next middleware / controller
         (req as AuthRequest).username = (decoded as jwt.JwtPayload).username;

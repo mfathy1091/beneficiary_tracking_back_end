@@ -11,7 +11,8 @@ import uploadRouter from './upload.routes'
 import registerRouter from './register.routes'
 import authRouter from './auth.routes'
 import refreshTokenRouter from './refreshToken.routes'
-
+import app from './../server'
+import verifyJWT from '../middlewares/verifyJWT.middleware';
 
 
 const router = express.Router();
@@ -22,14 +23,14 @@ router.use('/auth', authRouter)
 // and issue a new access token when it is expired
 router.use('/refresh-token', refreshTokenRouter) 
 // app.use(verifyJWT);
-router.use('/roles', roleRouter)
-router.use('/users', userRouter)
-router.use('/products', productRouter)
-router.use('/orders', orderRouter)
-router.use('/employees', employeeRouter)
-router.use('/beneficiaries', beneficiaryRouter)
-router.use('/ps-cases', psCaseRouter)
-router.use('/ps-services', psServiceRouter)
+router.use('/roles', verifyJWT, roleRouter)
+router.use('/users', verifyJWT, userRouter)
+router.use('/products', verifyJWT, productRouter)
+router.use('/orders', verifyJWT, orderRouter)
+router.use('/employees', verifyJWT, employeeRouter)
+router.use('/beneficiaries', verifyJWT, beneficiaryRouter)
+router.use('/ps-cases', verifyJWT, psCaseRouter)
+router.use('/ps-services', verifyJWT, psServiceRouter)
 
 router.use('/upload', uploadRouter)
 export default router;
