@@ -19,12 +19,12 @@ const refreshToken = async (req: Request, res: Response, next: NextFunction) => 
   try {
 		// (1) get the refreshToken from the httpOnly cookie
 		const cookies = req.cookies;
-    if (!cookies?.jwt) return res.sendStatus(401);
+    if (!cookies?.jwt) return res.status(401).json({ msg: "missing refresh token" });
     const refreshToken = cookies.jwt;
 
     // (2) Check if user exists
     const foundUser  = await authService.getUserByRefreshToken(refreshToken);
-		if (!foundUser) return res.sendStatus(403); //Forbidden 
+		if (!foundUser) return res.status(401).json({ msg: "user are not found" }); //Forbidden 
 		
     // (3) Verify the refreshToken
     jwt.verify(
