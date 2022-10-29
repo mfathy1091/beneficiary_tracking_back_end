@@ -5,7 +5,7 @@ Using access and refresh tokens
 * when refreshing the front-end, reenittiate the access token.
 
 
-# Storefront Backend Project
+![Screenshot](screenshot.png)
 
 ## A) Setup preparation
 ### 1- package installation
@@ -33,8 +33,8 @@ CREATE DATABASE pstic_test;
 
 ### 3- Grant all database perviliges to postgres user
 ```sh
-GRANT ALL PRIVILEGES ON DATABASE pstic TO postgres;
-GRANT ALL PRIVILEGES ON DATABASE pstic_test TO postgres;
+GRANT ALL PRIVILEGES ON DATABASE beneficiary_tracking TO postgres;
+GRANT ALL PRIVILEGES ON DATABASE beneficiary_tracking_test TO postgres;
 ```
 
 ### 4- Run migration

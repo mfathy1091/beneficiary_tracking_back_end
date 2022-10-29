@@ -5,13 +5,13 @@ import * as controller from '../controllers/user.controllers'
 
 const router = express.Router();
 
-router.get('/', verifyAuthToken, controller.index)
+router.get('/', controller.index)
 
-router.get('/:userId', verifyAuthToken, controller.show)
+router.get('/:userId', controller.show)
 
-router.put('/:userId', verifyAuthToken, controller.update)
+router.put('/:userId', controller.update)
 
-router.delete('/:userId', verifyAuthToken, controller.destroy)
+router.delete('/:userId', controller.destroy)
 
 
 export default router;

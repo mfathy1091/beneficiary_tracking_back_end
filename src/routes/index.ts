@@ -24,7 +24,7 @@ router.use('/auth', authRouter)
 router.use('/refresh-token', refreshTokenRouter) 
 // app.use(verifyJWT);
 router.use('/roles', verifyJWT, roleRouter)
-router.use('/users', verifyJWT, userRouter)
+router.use('/users', userRouter)
 router.use('/products', verifyJWT, productRouter)
 router.use('/orders', verifyJWT, orderRouter)
 router.use('/employees', verifyJWT, employeeRouter)

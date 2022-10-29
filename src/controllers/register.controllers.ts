@@ -17,7 +17,7 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
 
 
   const user: BaseUser = {
-    name: req.body.name,
+    full_name: req.body.fullName,
     email: req.body.email,
     username: req.body.username,
     password: req.body.password,

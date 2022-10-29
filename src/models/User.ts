@@ -4,7 +4,7 @@ export type BaseUser = {
     username: string,
     email: string,
     password: string,
-    name?: string,
+    full_name?: string,
     role_id: number,
     refresh_token?: string,
     avatar_url?: string,
@@ -13,13 +13,32 @@ export type BaseUser = {
 
 export default class UserModel {
 
-    async index(): Promise<BaseUser[]> {
+    async index(query: any): Promise<{}> {
         const connection = await pool.connect();
         try {
-            const sql = `SELECT username, email, name FROM users`;
-            const result = await connection.query(sql);
+            const sql = `
+                SELECT id, username, email, full_name 
+                FROM users
+                WHERE full_name ILIKE $1
+                LIMIT $3
+                OFFSET (($2 - 1) * $3);
+                `;
+            
+            const result = await connection.query(sql, [`%${query.stringToSearch}%`, query.page, query.limit]);
+            
+            const totalRowsSql = `
+            SELECT COUNT(*) 
+            FROM users 
+            WHERE full_name ILIKE $1 
+            `;
+            const totalRowsResult = await connection.query(totalRowsSql,  [`%${query.stringToSearch}%`]);
+            
+            const data = {
+                users: result.rows,
+                totalRows: totalRowsResult.rows[0].count
+            }
 
-            return result.rows;
+            return data;
         } catch (err) {
             throw new Error(`Cannot get users  ${(err as Error).message}`)
         } finally {
@@ -43,8 +62,8 @@ export default class UserModel {
         try {
             
             const conn = await pool.connect()
-            const sql = 'INSERT INTO users (name, username, email, password, role_id, is_active) VALUES($1, $2, $3, $4, $5, $6) RETURNING id, name, username, email, role_id, is_active'
-            const result = await conn.query(sql, [user.name, user.username, user.email, user.password, user.role_id, user.is_active])
+            const sql = 'INSERT INTO users (full_name, username, email, password, role_id, is_active) VALUES($1, $2, $3, $4, $5, $6) RETURNING id, full_name, username, email, role_id, is_active'
+            const result = await conn.query(sql, [user.full_name, user.username, user.email, user.password, user.role_id, user.is_active])
             const newUser = result.rows[0]
 
             conn.release()
