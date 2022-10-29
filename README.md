@@ -1,7 +1,7 @@
 # Authentication System
 
 ## 1) Login
-![Screenshot](/images/login_flowchart.png)
+![Screenshot](login_flowchart.png)
 
 – A refreshToken will be provided at the time user signs in.
 – A legal JWT must be added to HTTP Header if Client accesses protected resources.
