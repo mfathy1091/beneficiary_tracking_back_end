@@ -1,12 +1,13 @@
-## Authentication System
-Using access and refresh tokens
+# Authentication System
 
-* saving access token in front-end's state (on memory)
-* when refreshing the front-end, reenittiate the access token.
+## 1) Login
+![Screenshot](images/login_flowchart.png)
 
+– A refreshToken will be provided at the time user signs in.
+– A legal JWT must be added to HTTP Header if Client accesses protected resources.
+– With the help of Axios Interceptors, React App can check if the accessToken (JWT) is expired (401), sends /refreshToken request to receive new accessToken and use it for new resource request.
 
-![Screenshot](screenshot.png)
-
+---
 ## A) Setup preparation
 ### 1- package installation
 run `npm install`
@@ -27,8 +28,8 @@ CREATE USER postgres WITH PASSWORD 'postgres'
 
 ### 2- Create databases
 ```sh
-CREATE DATABASE pstic;
-CREATE DATABASE pstic_test;
+CREATE DATABASE beneficiary_tracking;
+CREATE DATABASE beneficiary_tracking_test;
 ```
 
 ### 3- Grant all database perviliges to postgres user
