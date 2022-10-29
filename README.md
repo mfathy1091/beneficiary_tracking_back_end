@@ -1,9 +1,10 @@
 # Authentication System
 
 ## 1) Login
+* used JWT to create tokens.
 ![Screenshot](images/login_flowchart.png)
 
-– A refreshToken will be provided at the time user signs in.
+## 2) Access Protected Resources
 – A legal JWT must be added to HTTP Header if Client accesses protected resources.
 – With the help of Axios Interceptors, React App can check if the accessToken (JWT) is expired (401), sends /refreshToken request to receive new accessToken and use it for new resource request.
 
