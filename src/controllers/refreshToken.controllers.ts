@@ -41,7 +41,7 @@ const refreshToken = async (req: Request, res: Response, next: NextFunction) => 
         const userData = {
           id: foundUser.id,
           username: foundUser.username,
-          name: foundUser.name,
+          fullName: foundUser.full_name,
           email: foundUser.email,
           avatarUrl: foundUser.avatar_url,
           role: foundUser.role_name,

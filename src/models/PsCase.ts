@@ -9,6 +9,7 @@ export type BasePsCase = {
 }
 
 export default class PsCaseModel {
+    
     async index(query: any): Promise<{}> {
         const connection = await pool.connect();
         try {
