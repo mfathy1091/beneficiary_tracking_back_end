@@ -17,6 +17,7 @@ export default class PsCaseModel {
                 SELECT * 
                 FROM ps_cases
                 WHERE status = $3
+                ORDER BY id DESC
                 LIMIT $2
                 OFFSET (($1 - 1) * $2);
                 `;

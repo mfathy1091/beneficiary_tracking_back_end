@@ -20,6 +20,7 @@ export default class UserModel {
                 SELECT id, username, email, full_name 
                 FROM users
                 WHERE full_name ILIKE $1
+                ORDER BY id DESC
                 LIMIT $3
                 OFFSET (($2 - 1) * $3);
                 `;

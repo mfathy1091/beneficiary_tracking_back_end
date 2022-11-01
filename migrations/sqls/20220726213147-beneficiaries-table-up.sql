@@ -3,7 +3,9 @@ CREATE TABLE beneficiaries (
     full_name VARCHAR(50) NOT NULL, 
     file_number VARCHAR(50) NOT NULL,
     individual_number VARCHAR(50),
-    passport_number VARCHAR(50)
+    passport_number VARCHAR(50),
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
 

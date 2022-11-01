@@ -4,8 +4,10 @@ export type BaseBeneficiary = {
     id?: number,
     full_name: string,
     file_number: string,
-    individual_number?: string
-    passport_number?: string
+    individual_number?: string,
+    passport_number?: string,
+    created_at?: string,
+    updated_at?: string,
 }
 
 export default class BeneficiaryModel {
@@ -19,6 +21,7 @@ export default class BeneficiaryModel {
             OR file_number ILIKE $1
             OR individual_number ILIKE $1
             OR passport_number ILIKE $1
+            ORDER BY id DESC
             LIMIT $3
             OFFSET (($2 - 1) * $3);
             `;
